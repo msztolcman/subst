@@ -125,22 +125,23 @@ def parse_args (args):
 
     return args
 
-def replace_linear (path, dst, p, r, cnt):
+def replace_linear (path, dst, pattern, replace, count):
     ret = 0
-    with open (path, 'r') as fh_src, open (dst, 'w') as fh_dst:
-        for line in fh_src:
-            if cnt == 0 or ret < cnt:
-                line, c = p.subn (r, line, max (0, cnt - ret))
-                ret += c
-            fh_dst.write (line)
-
+    with open (path, 'r') as fh_src:
+        with open (dst, 'w') as fh_dst:
+            for line in fh_src:
+                if count == 0 or ret < count:
+                    line, rest_count = pattern.subn (replace, line, max (0, count - ret))
+                    ret += rest_count
+                fh_dst.write (line)
     return ret
 
-def replace_global (path, dst, p, r, cnt):
-    with open (path, 'r') as fh_src, open (dst, 'w') as fh_dst:
-        data = fh_src.read ()
-        data, ret = p.subn (r, data, cnt)
-        fh_dst.write (data)
+def replace_global (path, dst, pattern, replace, count):
+    with open (path, 'r') as fh_src:
+        with open (dst, 'w') as fh_dst:
+            data = fh_src.read ()
+            data, ret = pattern.subn (replace, data, count)
+            fh_dst.write (data)
 
     return ret
 
