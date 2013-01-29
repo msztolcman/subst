@@ -11,7 +11,7 @@ from pprint import pprint, pformat
 
 import argparse
 
-DEFAULT_EXTENSION = 'bak'
+DEFAULT_BACKUP_EXTENSION = 'bak'
 
 class ParserException (Exception): pass
 class ReplaceException (Exception): pass
@@ -25,33 +25,25 @@ def msg (msg):
 def debug (msg):
     print (msg, file=sys.stderr)
 
-def parse_args (args):
-    p = argparse.ArgumentParser (
-        description='Replace PATTERN with REPLACE in many files',
-        epilog='',
-    )
-    p.add_argument ('-p', '--pattern', type=str, help='pattern to replace for. Supersede --pattern_and_replace. Required if --replace is specified.')
-    p.add_argument ('-r', '--replace', type=str, help='replacement. Supersede --pattern_and_replace. Required if --pattern is specified.')
-    p.add_argument ('-t', '--string', type=bool, help='if specified, treats --pattern as string, not as regular expression. Works only with --pattern switch.')
-    p.add_argument ('-s', '--pattern_and_replace', metavar='s/PAT/REP/g', type=str, help='pattern and replacement in one: s/pattern/replace/g (pattern is always regular expression, /g is optional and stands for --count=0).')
-    p.add_argument ('-c', '--count', default=0, type=int, help='make COUNT replacements for every file (0 make unlimited changes, default).')
-    p.add_argument ('-l', '--linear', action='store_true', help='apply pattern for every line separately. Without this flag whole file is read into memory.')
-    p.add_argument ('-b', '--no-backup', dest='no_backup', action='store_true', help='disable creating backup of modified files.')
-    p.add_argument ('-e', '--backup-extension', dest='ext', default='bak', type=str, help='extension for backuped files (ignore if no backup is created), without leading dot. Defaults to: "bak".')
-    p.add_argument ('--verbose', action='store_true', help='works in verbose mode.')
-    p.add_argument ('files', nargs='+', type=str, help='file to parse.')
+def get_ext (args):
+    if args.no_backup:
+        return ''
 
-    args = p.parse_args()
+    if args.ext is None or len (args.ext) == 0:
+        return '.' + DEFAULT_BACKUP_EXTENSION
 
-    if \
-        (args.pattern is None and args.replace is None and args.pattern_and_replace is None) or \
-        (args.pattern is None and args.replace is not None) or \
-        (args.pattern is not None and args.replace is None):
-        p.error ('must be provided --pattern and --replace options, or --pattern_and_replace.')
+    return '.' + args.ext
 
-    return p, args
+def prepare_replacement (r, to_eval=False):
+    if not to_eval:
+        return r
 
-def scan_pattern_data (args):
+    def repl (m):
+        return eval (r, { '__builtins__': __builtins__ }, { 'm': m })
+
+    return repl
+
+def prepare_pattern_data (args):
     if args.pattern is not None and args.replace is not None:
         if args.string:
             pattern = re.escape (args.pattern)
@@ -99,14 +91,39 @@ def scan_pattern_data (args):
     else:
         raise ParserException ('Bad pattern specified: {0}'.format (args.pattern_and_replace))
 
-def get_ext (args):
-    if args.no_backup:
-        return ''
+def parse_args (args):
+    p = argparse.ArgumentParser (
+        description='Replace PATTERN with REPLACE in many files',
+        epilog='',
+    )
+    p.add_argument ('-p', '--pattern', type=str, help='pattern to replace for. Supersede --pattern_and_replace. Required if --replace is specified.')
+    p.add_argument ('-r', '--replace', type=str, help='replacement. Supersede --pattern_and_replace. Required if --pattern is specified.')
+    p.add_argument ('-t', '--string', type=bool, help='if specified, treats --pattern as string, not as regular expression. Works only with --pattern switch.')
+    p.add_argument ('--eval-replace', dest='eval', action='store_true', help='if specified, make eval data from --replace (should be valid Python code). Ignored with --pattern_and_replace argument.')
+    p.add_argument ('-s', '--pattern_and_replace', metavar='s/PAT/REP/g', type=str, help='pattern and replacement in one: s/pattern/replace/g (pattern is always regular expression, /g is optional and stands for --count=0).')
+    p.add_argument ('-c', '--count', default=0, type=int, help='make COUNT replacements for every file (0 make unlimited changes, default).')
+    p.add_argument ('-l', '--linear', action='store_true', help='apply pattern for every line separately. Without this flag whole file is read into memory.')
+    p.add_argument ('-b', '--no-backup', dest='no_backup', action='store_true', help='disable creating backup of modified files.')
+    p.add_argument ('-e', '--backup-extension', dest='ext', default=DEFAULT_BACKUP_EXTENSION, type=str, help='extension for backuped files (ignore if no backup is created), without leading dot. Defaults to: "bak".')
+    p.add_argument ('--verbose', action='store_true', help='works in verbose mode.')
+    p.add_argument ('files', nargs='+', type=str, help='file to parse.')
 
-    if args.ext is None or len (args.ext) == 0:
-        return '.' + DEFAULT_EXTENSION
+    args = p.parse_args()
 
-    return '.' + args.ext
+    if \
+        (args.pattern is None and args.replace is None and args.pattern_and_replace is None) or \
+        (args.pattern is None and args.replace is not None) or \
+        (args.pattern is not None and args.replace is None):
+        p.error ('must be provided --pattern and --replace options, or --pattern_and_replace.')
+
+    try:
+        args.ext = get_ext (args)
+        args.pattern, args.replace, args.count = prepare_pattern_data (args)
+        args.replace = prepare_replacement (args.replace, args.eval)
+    except ParserException, e:
+        p.error (e)
+
+    return args
 
 def replace_linear (path, dst, p, r, cnt):
     ret = 0
@@ -128,13 +145,7 @@ def replace_global (path, dst, p, r, cnt):
     return ret
 
 def main ():
-    parser, args = parse_args (sys.argv[1:])
-
-    try:
-        pattern, replace, count = scan_pattern_data (args)
-        ext = get_ext (args)
-    except ParserException, e:
-        parser.error (e)
+    args = parse_args (sys.argv[1:])
 
     if args.linear:
         replace_func = replace_linear
@@ -152,7 +163,7 @@ def main ():
 
         if not args.no_backup:
             root = os.path.dirname (path)
-            backup_path = os.path.join (root, path + ext)
+            backup_path = os.path.join (root, path + args.ext)
 
             if os.path.exists (backup_path):
                 errmsg ('Backup path: "{0}" for file "{1}" already exists, file omited'.format (backup_path, path))
@@ -186,7 +197,7 @@ def main ():
                 debug ('Created temporary copy: "{0}" -> "{1}"'.format (path, tmp_path))
 
         try:
-            cnt = replace_func (path, tmp_path, pattern, replace, count)
+            cnt = replace_func (path, tmp_path, args.pattern, args.replace, args.count)
             if args.verbose:
                 debug ('Made {0} replacements in "{1}" ("{2}")'.format (cnt, path, tmp_path))
 
