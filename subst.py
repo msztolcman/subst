@@ -159,7 +159,13 @@ def parse_args (args):
 #             "* "
             "\n"
             "Security notes:\n"
-            "* be carefull with --eval-replace argument. When it's given, value passed to --replace is eval-ed, so any not safe code will be executed!"
+            "* be carefull with --eval-replace argument. When it's given, value passed to --replace is eval-ed, so any not safe code will be executed!\n"
+            "\n"
+            "Author:\n"
+            "Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net\n"
+            "\n"
+            "HomePage:\n"
+            "https://github.com/mysz/subst/"
         ),
     )
 
