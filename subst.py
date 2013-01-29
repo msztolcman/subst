@@ -136,6 +136,8 @@ def wrap_text (s):
     return "\n".join (s)
 
 def parse_args (args):
+    """ Parse arguments passed to script, validate it, compile if needed and return.
+    """
     p = argparse.ArgumentParser (
         description='Replace PATTERN with REPLACE in many files.',
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -199,6 +201,10 @@ def parse_args (args):
     return args
 
 def replace_linear (path, dst, pattern, replace, count):
+    """ Read file from 'path' line by line, replace some data from
+        regular expression in 'pattern' with data in 'replace',
+        write it to 'dst', and return quantity of replaces.
+    """
     ret = 0
     with open (path, 'r') as fh_src:
         with open (dst, 'w') as fh_dst:
@@ -210,6 +216,10 @@ def replace_linear (path, dst, pattern, replace, count):
     return ret
 
 def replace_global (path, dst, pattern, replace, count):
+    """ Read whole file from 'path', replace some data from
+        regular expression in 'pattern' with data in 'replace',
+        write it to 'dst', and return quantity of replaces.
+    """
     with open (path, 'r') as fh_src:
         with open (dst, 'w') as fh_dst:
             data = fh_src.read ()
