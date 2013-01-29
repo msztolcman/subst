@@ -134,18 +134,19 @@ def parse_args (args):
             "* be carefull with --eval-replace argument. When it's given, value passed to --replace is eval-ed, so any not safe code will be executed!"
         ),
     )
+
     p.add_argument ('-p', '--pattern', type=str, help='pattern to replace for. Supersede --pattern_and_replace. Required if --replace is specified.')
     p.add_argument ('-r', '--replace', type=str, help='replacement. Supersede --pattern_and_replace. Required if --pattern is specified.')
-    p.add_argument ('-t', '--string', type=bool, help='if specified, treats --pattern as string, not as regular expression. Works only with --pattern switch.')
     p.add_argument ('--eval-replace', dest='eval', action='store_true', help='if specified, make eval data from --replace (should be valid Python code). Ignored with --pattern_and_replace argument.')
+    p.add_argument ('-t', '--string', type=bool, help='if specified, treats --pattern as string, not as regular expression. Ignored with --pattern_and_replace argument.')
     p.add_argument ('-s', '--pattern_and_replace', metavar='s/PAT/REP/g', type=str, help='pattern and replacement in one: s/pattern/replace/g (pattern is always regular expression, /g is optional and stands for --count=0).')
     p.add_argument ('-c', '--count', type=int, help='make COUNT replacements for every file (0 make unlimited changes, default).')
     p.add_argument ('-l', '--linear', action='store_true', help='apply pattern for every line separately. Without this flag whole file is read into memory.')
     p.add_argument ('-b', '--no-backup', dest='no_backup', action='store_true', help='disable creating backup of modified files.')
     p.add_argument ('-e', '--backup-extension', dest='ext', default=DEFAULT_BACKUP_EXTENSION, type=str, help='extension for backuped files (ignore if no backup is created), without leading dot. Defaults to: "bak".')
-    p.add_argument ('-v', '--version', action='store_true', help='show version and exit')
     p.add_argument ('--verbose', action='store_true', help='show files and how many replacements was done')
     p.add_argument ('--debug', action='store_true', help='show more infos')
+    p.add_argument ('-v', '--version', action='store_true', help='show version and exit')
     p.add_argument ('files', nargs='*', type=str, help='file to parse.')
 
     args = p.parse_args()
