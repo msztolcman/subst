@@ -100,7 +100,7 @@ Replace every IP address in form: 192.168.0.X (where X is few digits) with
 License
 =======
 
-(MIT)[http://opensource.org/licenses/MIT]
+MIT: http://opensource.org/licenses/MIT
 
 Author
 ======
@@ -110,5 +110,5 @@ Marcin Sztolcman <marcin@urzenia.net>
 Links
 =====
 
-* HomePage: [https://github.com/mysz/subst/]
-* Issues:   [https://github.com/mysz/subst/issues]
+* HomePage: https://github.com/mysz/subst/
+* Issues:   https://github.com/mysz/subst/issues
