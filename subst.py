@@ -105,7 +105,8 @@ def parse_args (args):
     p.add_argument ('-l', '--linear', action='store_true', help='apply pattern for every line separately. Without this flag whole file is read into memory.')
     p.add_argument ('-b', '--no-backup', dest='no_backup', action='store_true', help='disable creating backup of modified files.')
     p.add_argument ('-e', '--backup-extension', dest='ext', default=DEFAULT_BACKUP_EXTENSION, type=str, help='extension for backuped files (ignore if no backup is created), without leading dot. Defaults to: "bak".')
-    p.add_argument ('--verbose', action='store_true', help='works in verbose mode.')
+    p.add_argument ('--verbose', action='store_true', help='show files and how many replacements was done')
+    p.add_argument ('--debug', action='store_true', help='show more infos')
     p.add_argument ('files', nargs='+', type=str, help='file to parse.')
 
     args = p.parse_args()
@@ -153,15 +154,15 @@ def main ():
         replace_func = replace_global
 
     for path in args.files:
-        if args.verbose:
+        if args.verbose or args.debug:
             debug (path)
 
         if not os.path.exists (path):
-            errmsg ('Path "{0}" doesn\'t exists'.format (path), int (args.verbose))
+            errmsg ('Path "{0}" doesn\'t exists'.format (path), int (args.verbose or args.debug))
             continue
 
         if not os.path.isfile (path) or os.path.islink (path):
-            errmsg ('Path "{0}" is not a regular file'.format (path), int (args.verbose))
+            errmsg ('Path "{0}" is not a regular file'.format (path), int (args.verbose or args.debug))
             continue
 
         if not args.no_backup:
@@ -169,19 +170,19 @@ def main ():
             backup_path = os.path.join (root, path + args.ext)
 
             if os.path.exists (backup_path):
-                errmsg ('Backup path: "{0}" for file "{1}" already exists, file omited'.format (backup_path, path), int (args.verbose))
+                errmsg ('Backup path: "{0}" for file "{1}" already exists, file omited'.format (backup_path, path), int (args.verbose or args.debug))
                 continue
 
             try:
                 shutil.copy2 (path, backup_path)
             except shutil.Error, e:
-                errmsg ('Cannot create backup for "{0}": {1}'.format (path, e), int (args.verbose))
+                errmsg ('Cannot create backup for "{0}": {1}'.format (path, e), int (args.verbose or args.debug))
                 continue
             except IOError, e:
-                errmsg ('Cannot create backup for "{0}": {1}'.format (path, e), int (args.verbose))
+                errmsg ('Cannot create backup for "{0}": {1}'.format (path, e), int (args.verbose or args.debug))
                 continue
 
-            if args.verbose:
+            if args.debug:
                 debug ('created backup file: "{0}"'.format (backup_path), 1)
 
         tmp_fh, tmp_path = tempfile.mkstemp ()
@@ -190,29 +191,29 @@ def main ():
         try:
             shutil.copy2 (path, tmp_path)
         except shutil.Error, e:
-            errmsg ('Cannot create temporary file "{0}" for "{1}": {2}'.format (tmp_path, path, e), int (args.verbose))
+            errmsg ('Cannot create temporary file "{0}" for "{1}": {2}'.format (tmp_path, path, e), int (args.verbose or args.debug))
             continue
         except IOError, e:
-            errmsg ('Cannot create temporary file "{0}" for "{1}": {2}'.format (tmp_path, path, e), int (args.verbose))
+            errmsg ('Cannot create temporary file "{0}" for "{1}": {2}'.format (tmp_path, path, e), int (args.verbose or args.debug))
             continue
         else:
-            if args.verbose:
+            if args.debug:
                 debug ('created temporary copy: "{0}"'.format (tmp_path), 1)
 
         try:
             cnt = replace_func (path, tmp_path, args.pattern, args.replace, args.count)
-            if args.verbose:
-                debug ('made {0} replacements in "{1}"'.format (cnt, tmp_path), 1)
+            if args.verbose or args.debug:
+                debug ('{0} replacements'.format (cnt), 1)
 
             os.rename (tmp_path, path)
         except ReplaceException, e:
-            errmsg ('Error processing "{0}" ("{1}"): {2}'.format (path, tmp_path, e), int (args.verbose))
+            errmsg ('Error processing "{0}" ("{1}"): {2}'.format (path, tmp_path, e), int (args.verbose or args.debug))
             continue
         except OSError, e:
-            errmsg ('Error replacing "{0}" with "{1}": {2}'.format (path, tmp_path, e), int (args.verbose))
+            errmsg ('Error replacing "{0}" with "{1}": {2}'.format (path, tmp_path, e), int (args.verbose or args.debug))
             continue
         else:
-            if args.verbose:
+            if args.debug:
                 debug ('moved temporary file to original', 1)
 
 if __name__ == '__main__':
