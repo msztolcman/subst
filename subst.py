@@ -111,9 +111,9 @@ def parse_args (args):
     args = p.parse_args()
 
     if \
-        (args.pattern is None and args.replace is None and args.pattern_and_replace is None) or \
-        (args.pattern is None and args.replace is not None) or \
-        (args.pattern is not None and args.replace is None):
+            (args.pattern is None and args.replace is None and args.pattern_and_replace is None) or \
+            (args.pattern is None and args.replace is not None) or \
+            (args.pattern is not None and args.replace is None):
         p.error ('must be provided --pattern and --replace options, or --pattern_and_replace.')
 
     try:
