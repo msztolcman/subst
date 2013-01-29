@@ -7,6 +7,7 @@ import sys
 import re
 import shutil
 import tempfile
+import textwrap
 from pprint import pprint, pformat
 
 import argparse
@@ -90,10 +91,32 @@ def prepare_pattern_data (args):
     else:
         raise ParserException ('Bad pattern specified: {0}'.format (args.pattern_and_replace))
 
+def wrap_text (s):
+    w = textwrap.TextWrapper (
+        width = 72,
+        expand_tabs = True,
+        replace_whitespace = False,
+        drop_whitespace = True,
+        subsequent_indent = '  ',
+    )
+    s = [ w.fill (line) for line in s.splitlines () ]
+    return "\n".join (s)
+
 def parse_args (args):
     p = argparse.ArgumentParser (
-        description='Replace PATTERN with REPLACE in many files',
-        epilog='',
+        description='Replace PATTERN with REPLACE in many files.',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=wrap_text ("Miscellaneous notes:\n"
+            "* regular expressions engine used here is PCRE, dialect from Python\n"
+            "* is required to pass either --pattern and -replace, or --pattern_and_replace argument\n"
+            "* if pattern passed to --pattern_and_replace has /g modifier, it overwrites --count value\n"
+            "* if neither /g modifier nor --count argument is passed, assume that --count is equal 1\n"
+            "* if only --count is given, this value is used\n"
+            "* if --eval-replace is given, --replace must be valid Python code, where can be used m variable. m holds MatchObject instance (see: http://http://docs.python.org/2/library/re.html#match-objects, for example:\n"
+            "    --eval-replace --replace 'm.group (1).lower ()'\n\n"
+            "Security notes:\n"
+            "* be carefull with --eval-replace argument. When it's given, value passed to --replace is eval-ed, so any not safe code will be executed!"
+        ),
     )
     p.add_argument ('-p', '--pattern', type=str, help='pattern to replace for. Supersede --pattern_and_replace. Required if --replace is specified.')
     p.add_argument ('-r', '--replace', type=str, help='replacement. Supersede --pattern_and_replace. Required if --pattern is specified.')
