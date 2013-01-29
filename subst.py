@@ -14,7 +14,6 @@ import argparse
 DEFAULT_BACKUP_EXTENSION = 'bak'
 
 class ParserException (Exception): pass
-class ReplaceException (Exception): pass
 
 def errmsg (msg, indent=0, end=None):
     print ((' ' * indent * 4) + msg, file=sys.stderr, end=end)
@@ -206,9 +205,6 @@ def main ():
                 debug ('{0} replacements'.format (cnt), 1)
 
             os.rename (tmp_path, path)
-        except ReplaceException, e:
-            errmsg ('Error processing "{0}" ("{1}"): {2}'.format (path, tmp_path, e), int (args.verbose or args.debug))
-            continue
         except OSError, e:
             errmsg ('Error replacing "{0}" with "{1}": {2}'.format (path, tmp_path, e), int (args.verbose or args.debug))
             continue
