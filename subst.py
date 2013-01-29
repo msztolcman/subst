@@ -33,6 +33,8 @@ def debug (msg, indent=0, end=None):
     print ((' ' * indent * 4) + msg, file=sys.stderr, end=end)
 
 def get_ext (args):
+    """ Find extension for backup files
+    """
     if args.no_backup:
         return ''
 
@@ -42,6 +44,10 @@ def get_ext (args):
     return '.' + args.ext
 
 def prepare_replacement (r, to_eval=False):
+    """ If to_eval argument is True, then compile replace argument
+        as valid Python code and return function which can be passed
+        to re.sub or re.subn functions.
+    """
     if not to_eval:
         return r
 
@@ -51,6 +57,21 @@ def prepare_replacement (r, to_eval=False):
     return repl
 
 def prepare_pattern_data (args):
+    """ Read arguments from argparse.ArgumentParser instance, and
+        parse it to find correct values for arguments:
+            * pattern
+            * replace
+            * count
+        If is provided --pattern_and_replace argument, then parse
+        it and return data from it.
+
+        In other case just return data from argparse.ArgumentParser
+        instance.
+
+        Reads also string argument, and apply it to pattern.
+
+        Returned pattern is compiled (see: re.compile).
+    """
     if args.pattern is not None and args.replace is not None:
         if args.string:
             pattern = re.escape (args.pattern)
@@ -99,6 +120,11 @@ def prepare_pattern_data (args):
         raise ParserException ('Bad pattern specified: {0}'.format (args.pattern_and_replace))
 
 def wrap_text (s):
+    """ Make custom wrapper for passed text.
+
+        Splits given text for lines, and for every line apply custom
+        textwrap.TextWrapper settings, then return reformatted string.
+    """
     w = textwrap.TextWrapper (
         width = 72,
         expand_tabs = True,
