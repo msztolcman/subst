@@ -112,10 +112,10 @@ def replace_linear (path, dst, p, r, cnt):
     ret = 0
     with open (path, 'r') as fh_src, open (dst, 'w') as fh_dst:
         for line in fh_src:
-            data, c = p.subn (r, line, cnt)
-            fh_dst.write (data)
-
-            ret += c
+            if cnt == 0 or ret < cnt:
+                line, c = p.subn (r, line, max (0, cnt - ret))
+                ret += c
+            fh_dst.write (line)
 
     return ret
 
@@ -163,6 +163,9 @@ def main ():
             except shutil.Error, e:
                 errmsg ('Cannot create backup for "{0}": {1}'.format (path, e))
                 continue
+            except IOError, e:
+                errmsg ('Cannot create backup for "{0}": {1}'.format (path, e))
+                continue
 
             if args.verbose:
                 debug ('Created backup: "{0}" -> "{1}"'.format (path, backup_path))
@@ -175,9 +178,12 @@ def main ():
         except shutil.Error, e:
             errmsg ('Cannot create temporary file "{0}" for "{1}": {2}'.format (tmp_path, path, e))
             continue
+        except IOError, e:
+            errmsg ('Cannot create temporary file "{0}" for "{1}": {2}'.format (tmp_path, path, e))
+            continue
         else:
             if args.verbose:
-                debug ('Created temporary copy: "{0}" -> "{1}"'.format (path, backup_path))
+                debug ('Created temporary copy: "{0}" -> "{1}"'.format (path, tmp_path))
 
         try:
             cnt = replace_func (path, tmp_path, pattern, replace, count)
