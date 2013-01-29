@@ -2,19 +2,26 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function, unicode_literals
-import os, os.path
-import sys
-import re
-import shutil
-import tempfile
-import textwrap
-from pprint import pprint, pformat
 
 import argparse
+import os, os.path
+import re
+import shutil
+import sys
+import tempfile
+import textwrap
+
+from pprint import pprint, pformat
+
+__version__ = '0.1'
 
 DEFAULT_BACKUP_EXTENSION = 'bak'
 
 class ParserException (Exception): pass
+
+def show_version ():
+    msg ('{0}: version {1}'.format (os.path.basename (sys.argv[0]), __version__))
+    sys.exit (0)
 
 def errmsg (msg, indent=0, end=None):
     print ((' ' * indent * 4) + msg, file=sys.stderr, end=end)
@@ -127,11 +134,18 @@ def parse_args (args):
     p.add_argument ('-l', '--linear', action='store_true', help='apply pattern for every line separately. Without this flag whole file is read into memory.')
     p.add_argument ('-b', '--no-backup', dest='no_backup', action='store_true', help='disable creating backup of modified files.')
     p.add_argument ('-e', '--backup-extension', dest='ext', default=DEFAULT_BACKUP_EXTENSION, type=str, help='extension for backuped files (ignore if no backup is created), without leading dot. Defaults to: "bak".')
+    p.add_argument ('-v', '--version', action='store_true', help='show version and exit')
     p.add_argument ('--verbose', action='store_true', help='show files and how many replacements was done')
     p.add_argument ('--debug', action='store_true', help='show more infos')
-    p.add_argument ('files', nargs='+', type=str, help='file to parse.')
+    p.add_argument ('files', nargs='*', type=str, help='file to parse.')
 
     args = p.parse_args()
+
+    if args.version:
+        return args
+
+    if len (args.files) == 0:
+        p.error ('too few arguments')
 
     if \
             (args.pattern is None and args.replace is None and args.pattern_and_replace is None) or \
@@ -169,6 +183,9 @@ def replace_global (path, dst, pattern, replace, count):
 
 def main ():
     args = parse_args (sys.argv[1:])
+
+    if args.version:
+        show_version ()
 
     if args.linear:
         replace_func = replace_linear
