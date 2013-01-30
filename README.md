@@ -6,6 +6,18 @@ subst.py is simple utility to replace one string into another in given list of f
 How to use it?
 ==============
 
+Simple
+------
+
+    echo 'Hello World!' | subst.py -s 's/Hello/Hi/' -
+
+or:
+
+    substr.py -p '(192\.168)\.1\.(10)' -r '\1.0.\2' /etc/hosts
+
+More
+----
+
 Everything is in help :) Just execute:
 
     python subst.py --help
