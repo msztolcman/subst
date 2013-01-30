@@ -206,31 +206,27 @@ def parse_args (args):
 
     return args
 
-def replace_linear (path, dst, pattern, replace, count):
-    """ Read file from 'path' line by line, replace some data from
+def replace_linear (src, dst, pattern, replace, count):
+    """ Read data from 'src' line by line, replace some data from
         regular expression in 'pattern' with data in 'replace',
         write it to 'dst', and return quantity of replaces.
     """
     ret = 0
-    with open (path, 'r') as fh_src:
-        with open (dst, 'w') as fh_dst:
-            for line in fh_src:
-                if count == 0 or ret < count:
-                    line, rest_count = pattern.subn (replace, line, max (0, count - ret))
-                    ret += rest_count
-                fh_dst.write (line)
+    for line in src:
+        if count == 0 or ret < count:
+            line, rest_count = pattern.subn (replace, line, max (0, count - ret))
+            ret += rest_count
+        dst.write (line)
     return ret
 
-def replace_global (path, dst, pattern, replace, count):
-    """ Read whole file from 'path', replace some data from
+def replace_global (src, dst, pattern, replace, count):
+    """ Read whole file from 'src', replace some data from
         regular expression in 'pattern' with data in 'replace',
         write it to 'dst', and return quantity of replaces.
     """
-    with open (path, 'r') as fh_src:
-        with open (dst, 'w') as fh_dst:
-            data = fh_src.read ()
-            data, ret = pattern.subn (replace, data, count)
-            fh_dst.write (data)
+    data = src.read ()
+    data, ret = pattern.subn (replace, data, count)
+    dst.write (data)
     return ret
 
 def main ():
@@ -292,9 +288,11 @@ def main ():
                 debug ('created temporary copy: "{0}"'.format (tmp_path), 1)
 
         try:
-            cnt = replace_func (path, tmp_path, args.pattern, args.replace, args.count)
-            if args.verbose or args.debug:
-                debug ('{0} replacements'.format (cnt), 1)
+            with open (path, 'r') as fh_src:
+                with open (tmp_path, 'w') as fh_dst:
+                    cnt = replace_func (fh_src, fh_dst, args.pattern, args.replace, args.count)
+                    if args.verbose or args.debug:
+                        debug ('{0} replacements'.format (cnt), 1)
 
             os.rename (tmp_path, path)
         except OSError, e:
