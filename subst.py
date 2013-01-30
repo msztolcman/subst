@@ -178,6 +178,8 @@ def parse_args (args):
     p.add_argument ('-l', '--linear', action='store_true', help='apply pattern for every line separately. Without this flag whole file is read into memory.')
     p.add_argument ('-b', '--no-backup', dest='no_backup', action='store_true', help='disable creating backup of modified files.')
     p.add_argument ('-e', '--backup-extension', dest='ext', default=DEFAULT_BACKUP_EXTENSION, type=str, help='extension for backuped files (ignore if no backup is created), without leading dot. Defaults to: "bak".')
+    p.add_argument ('--stdin', action='store_true', help='read data from STDIN (implies --stdout)')
+    p.add_argument ('--stdout', action='store_true', help='output data to STDOUT instead of change files in-place')
     p.add_argument ('--verbose', action='store_true', help='show files and how many replacements was done')
     p.add_argument ('--debug', action='store_true', help='show more infos')
     p.add_argument ('-v', '--version', action='store_true', help='show version and exit')
@@ -188,8 +190,11 @@ def parse_args (args):
     if args.version:
         return args
 
-    if len (args.files) == 0:
-        p.error ('too few arguments')
+    if not args.files == 0 or args.files[0] == '-':
+        args.stdin = True
+
+    if args.stdin:
+        args.stdout = True
 
     if \
             (args.pattern is None and args.replace is None and args.pattern_and_replace is None) or \
