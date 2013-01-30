@@ -117,10 +117,14 @@ Look at result:
 Some examples?
 ==============
 
-Replace every IP address in form: 192.168.0.X (where X is few digits) with
-192.168.1.X:
+Simple replace word 'Hello' with 'Hi' in data read from STDIN:
 
-    python subst.py -s 's/(192\.168\.)0(\.\d+)/\11\2/g' *
+    echo 'Hello World!' | subst.py -s 's/Hello/Hi/' -
+
+Replace every IP address in form: 192.168.1.X (where X is few digits - single octet)
+with 192.168.0.X in `/etc/hosts`:
+
+    substr.py -p '(192\.168)\.1\.(10)' -r '\1.0.\2' /etc/hosts
 
 License
 =======
