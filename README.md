@@ -3,8 +3,21 @@ What is this for?
 
 subst.py is simple utility to replace one string into another in given list of files.
 
-How to use it?
-==============
+But why?
+========
+
+1. There is `sed` for example?
+
+Yes, it is. But `sed` use regexps engine called "Basic Regular Expressions", or "Extended
+Regular Expression". PCRE is much more widely used dialect.
+
+2. So I can use Perl!
+
+Of course you can. But not everyone know how to use Perl. I know, but `subst.py` is IMHO
+simpler to use.
+
+OK, so how to use it?
+=====================
 
 Everything is in help :) Just execute:
 
@@ -112,3 +125,4 @@ Links
 
 * HomePage: https://github.com/mysz/subst/
 * Issues:   https://github.com/mysz/subst/issues
+
