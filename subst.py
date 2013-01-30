@@ -66,7 +66,7 @@ def debug(message, indent=0, end=None):
 
     print((' ' * indent * 4) + message, file=sys.stderr, end=end)
 
-def get_ext(args):
+def _parse_args__get_ext(args):
     """ Find extension for backup files
     """
     if args.no_backup:
@@ -77,20 +77,16 @@ def get_ext(args):
 
     return '.' + args.ext
 
-def prepare_replacement(repl, to_eval=False):
-    """ If to_eval argument is True, then compile replace argument
-        as valid Python code and return function which can be passed
-        to re.sub or re.subn functions.
+def _parse_args__eval_replacement(r):
+    """ Compile replace argument as valid Python code and return
+        function which can be passed to re.sub or re.subn functions.
     """
-    if not to_eval:
-        return repl
-
-    def _(match):  # pylint: disable-msg=missing-docstring
-        return eval(repl, { '__builtins__': __builtins__ }, { 'm': match })
+    def repl(m):
+        return eval (r, { '__builtins__': __builtins__ }, { 'm': m })
 
     return _
 
-def prepare_pattern_data(args):  # pylint: disable-msg=too-many-branches
+def _parse_args__pattern(args):  # pylint: disable-msg=too-many-branches
     """ Read arguments from argparse.ArgumentParser instance, and
         parse it to find correct values for arguments:
             * pattern
@@ -292,9 +288,10 @@ def parse_args(args):
         p.error('must be provided --pattern and --replace options, or --pattern_and_replace.')
 
     try:
-        args.ext = get_ext(args)
-        args.pattern, args.replace, args.count = prepare_pattern_data(args)
-        args.replace = prepare_replacement(args.replace, args.eval)
+        args.ext = _parse_args__get_ext(args)
+        args.pattern, args.replace, args.count = _parse_args__pattern(args)
+        if args.eval:
+            args.replace = _parse_args__eval_replacement (args.replace)
     except ParserException as ex:
         p.error(ex)
 
