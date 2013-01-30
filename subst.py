@@ -77,6 +77,15 @@ def prepare_pattern_data (args):
     if args.ignore_case:
         flags |= re.IGNORECASE
 
+    if args.pattern_dot_all:
+        flags |= re.DOTALL
+
+    if args.pattern_verbose:
+        flags |= re.VERBOSE
+
+    if args.pattern_multiline:
+        flags |= re.MULTILINE
+
     if args.pattern is not None and args.replace is not None:
         if args.string:
             pattern = re.escape (args.pattern)
@@ -182,6 +191,10 @@ def parse_args (args):
     p.add_argument ('-c', '--count', type=int, help='make COUNT replacements for every file (0 make unlimited changes, default).')
     p.add_argument ('-l', '--linear', action='store_true', help='apply pattern for every line separately. Without this flag whole file is read into memory.')
     p.add_argument ('-i', '--ignore-case', dest='ignore_case', action='store_true', help='ignore case of characters when matching')
+    p.add_argument ('--pattern-dot-all', dest='pattern_dot_all', action='store_true', help='with this flag, dot (.) character in pattern match also new line character (see: http://docs.python.org/2/library/re.html#re.DOTALL).')
+    p.add_argument ('--pattern-verbose', dest='pattern_verbose', action='store_true', help='with this flag pattern can be passed as verbose (see: http://docs.python.org/2/library/re.html#re.VERBOSE).')
+    p.add_argument ('--pattern-multiline', dest='pattern_multiline', action='store_true', help='with this flag pattern can be passed as multiline (see: http://docs.python.org/2/library/re.html#re.MULTILINE).')
+
     p.add_argument ('-b', '--no-backup', dest='no_backup', action='store_true', help='disable creating backup of modified files.')
     p.add_argument ('-e', '--backup-extension', dest='ext', default=DEFAULT_BACKUP_EXTENSION, type=str, help='extension for backuped files (ignore if no backup is created), without leading dot. Defaults to: "bak".')
     p.add_argument ('--stdin', action='store_true', help='read data from STDIN (implies --stdout)')
