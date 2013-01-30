@@ -108,6 +108,7 @@ def prepare_pattern_data(args):  # pylint: disable-msg=too-many-branches
     """
 
     flags = 0
+
     if args.ignore_case:
         flags |= re.IGNORECASE
 
@@ -194,6 +195,7 @@ def wrap_text(txt):
 def parse_args(args):
     """ Parse arguments passed to script, validate it, compile if needed and return.
     """
+
     p = argparse.ArgumentParser(  # pylint: disable-msg=invalid-name
         description='Replace PATTERN with REPLACE in many files.',
         formatter_class=argparse.RawDescriptionHelpFormatter,
