@@ -103,30 +103,38 @@ def prepare_pattern_data (args):
                 raise ParserException ('Bad pattern specified: {0}'.format (args.pattern_and_replace))
             p = p[1:]
 
+            # parse pattern
+            if p.startswith ('('):
+                pattern, replace, _flags = p[1:].split (')(', 2)
+            elif p.startswith ('{'):
+                pattern, replace, _flags = p[1:].split ('}{', 2)
+            elif p.startswith ('['):
+                pattern, replace, _flags = p[1:].split ('][', 2)
+            elif p.startswith ('<'):
+                pattern, replace, _flags = p[1:].split ('><', 2)
+            else:
+                delim = p[0]
+
+                p = p[1:]
+                pattern, replace, _flags = p.split (delim, 2)
+
             # pattern can be suffixed with g (as global)
-            if p.endswith ('g'):
+            if 'g' in _flags:
                 count = 0
                 p = p[:-1]
             else:
                 count = args.count if args.count is not None else 1
 
-            # parse pattern
-            if p.startswith ('(') and p.endswith (')'):
-                pattern, replace = p[1:-1].split (')(', 1)
-            elif p.startswith ('{') and p.endswith ('}'):
-                pattern, replace = p[1:-1].split ('}{', 1)
-            elif p.startswith ('[') and p.endswith (']'):
-                pattern, replace = p[1:-1].split ('][', 1)
-            elif p.startswith ('<') and p.endswith ('>'):
-                pattern, replace = p[1:-1].split ('><', 1)
-            else:
-                delim = p[0]
-                if not p.endswith (delim):
-                    raise ParserException ('Bad pattern specified: {0}'.format (args.pattern_and_replace))
+            if 'i' in _flags:
+                flags |= re.IGNORECASE
+            if 'x' in _flags:
+                flags |= re.VERBOSE
+            if 's' in _flags:
+                flags |= re.DOTALL
+            if 'm' in _flags:
+                flags |= re.MULTILINE
 
-                p = p[1:-1]
-                pattern, replace = p.split (delim, 1)
-        except ValueError:
+        except ValueError, e:
             raise ParserException ('Bad pattern specified: {0}'.format (args.pattern_and_replace))
 
         return re.compile (pattern, flags), replace, count
@@ -187,14 +195,13 @@ def parse_args (args):
     p.add_argument ('-r', '--replace', type=str, help='replacement. Supersede --pattern_and_replace. Required if --pattern is specified.')
     p.add_argument ('--eval-replace', dest='eval', action='store_true', help='if specified, make eval data from --replace (should be valid Python code). Ignored with --pattern_and_replace argument.')
     p.add_argument ('-t', '--string', type=bool, help='if specified, treats --pattern as string, not as regular expression. Ignored with --pattern_and_replace argument.')
-    p.add_argument ('-s', '--pattern_and_replace', metavar='s/PAT/REP/g', type=str, help='pattern and replacement in one: s/pattern/replace/g (pattern is always regular expression, /g is optional and stands for --count=0).')
+    p.add_argument ('-s', '--pattern_and_replace', metavar='"s/PAT/REP/gixsm"', type=str, help='pattern and replacement in one: s/pattern/replace/g (pattern is always regular expression, /g is optional and stands for --count=0, /i == --ignore-case, /s == --pattern-dot-all, /m == --pattern-multiline).')
     p.add_argument ('-c', '--count', type=int, help='make COUNT replacements for every file (0 make unlimited changes, default).')
     p.add_argument ('-l', '--linear', action='store_true', help='apply pattern for every line separately. Without this flag whole file is read into memory.')
     p.add_argument ('-i', '--ignore-case', dest='ignore_case', action='store_true', help='ignore case of characters when matching')
     p.add_argument ('--pattern-dot-all', dest='pattern_dot_all', action='store_true', help='with this flag, dot (.) character in pattern match also new line character (see: http://docs.python.org/2/library/re.html#re.DOTALL).')
     p.add_argument ('--pattern-verbose', dest='pattern_verbose', action='store_true', help='with this flag pattern can be passed as verbose (see: http://docs.python.org/2/library/re.html#re.VERBOSE).')
     p.add_argument ('--pattern-multiline', dest='pattern_multiline', action='store_true', help='with this flag pattern can be passed as multiline (see: http://docs.python.org/2/library/re.html#re.MULTILINE).')
-
     p.add_argument ('-b', '--no-backup', dest='no_backup', action='store_true', help='disable creating backup of modified files.')
     p.add_argument ('-e', '--backup-extension', dest='ext', default=DEFAULT_BACKUP_EXTENSION, type=str, help='extension for backuped files (ignore if no backup is created), without leading dot. Defaults to: "bak".')
     p.add_argument ('--stdin', action='store_true', help='read data from STDIN (implies --stdout)')
