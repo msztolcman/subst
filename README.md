@@ -37,12 +37,13 @@ Everything is in help :) Just execute:
 
 Look at result:
 
-    % python subst.py --help                                 
+    % python subst.py --help                                          
     usage: subst.py [-h] [-p PATTERN] [-r REPLACE] [--eval-replace] [-t STRING]
-                    [-s s/PAT/REP/g] [-c COUNT] [-l] [-b] [-e EXT] [--verbose]
-                    [--debug] [-v]
+                    [-s "s/PAT/REP/gixsm"] [-c COUNT] [-l] [-i]
+                    [--pattern-dot-all] [--pattern-verbose] [--pattern-multiline]
+                    [-b] [-e EXT] [--stdin] [--stdout] [--verbose] [--debug] [-v]
                     [files [files ...]]
-    
+
     Replace PATTERN with REPLACE in many files.
     
     positional arguments:
@@ -64,19 +65,32 @@ Look at result:
                             if specified, treats --pattern as string, not as
                             regular expression. Ignored with --pattern_and_replace
                             argument.
-    -s s/PAT/REP/g, --pattern_and_replace s/PAT/REP/g
+    -s "s/PAT/REP/gixsm", --pattern_and_replace "s/PAT/REP/gixsm"
                             pattern and replacement in one: s/pattern/replace/g
                             (pattern is always regular expression, /g is optional
-                            and stands for --count=0).
+                            and stands for --count=0, /i == --ignore-case, /s ==
+                            --pattern-dot-all, /m == --pattern-multiline).
     -c COUNT, --count COUNT
                             make COUNT replacements for every file (0 make
                             unlimited changes, default).
     -l, --linear          apply pattern for every line separately. Without this
                             flag whole file is read into memory.
+    -i, --ignore-case     ignore case of characters when matching
+    --pattern-dot-all     with this flag, dot (.) character in pattern match
+                            also new line character (see:
+                            http://docs.python.org/2/library/re.html#re.DOTALL).
+    --pattern-verbose     with this flag pattern can be passed as verbose (see:
+                            http://docs.python.org/2/library/re.html#re.VERBOSE).
+    --pattern-multiline   with this flag pattern can be passed as multiline
+                            (see: http://docs.python.org/2/library/re.html#re.MULT
+                            ILINE).
     -b, --no-backup       disable creating backup of modified files.
     -e EXT, --backup-extension EXT
                             extension for backuped files (ignore if no backup is
                             created), without leading dot. Defaults to: "bak".
+    --stdin               read data from STDIN (implies --stdout)
+    --stdout              output data to STDOUT instead of change files in-place
+                            (implies --no-backup)
     --verbose             show files and how many replacements was done
     --debug               show more infos
     -v, --version         show version and exit
