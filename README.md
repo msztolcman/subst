@@ -7,14 +7,12 @@ But why?
 ========
 
 1. There is `sed` for example?
-
-Yes, it is. But `sed` use regexps engine called "Basic Regular Expressions", or "Extended
-Regular Expression". PCRE is much more widely used dialect.
+    Yes, it is. But `sed` use regexps engine called "Basic Regular Expressions", or "Extended
+    Regular Expression". PCRE is much more widely used dialect.
 
 2. So I can use Perl!
-
-Of course you can. But not everyone know how to use Perl. I know, but `subst.py` is IMHO
-simpler to use.
+    Of course you can. But not everyone know how to use Perl. I know, but `subst.py` is IMHO
+    simpler to use.
 
 OK, so how to use it?
 =====================
