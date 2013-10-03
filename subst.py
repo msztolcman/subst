@@ -324,23 +324,21 @@ def replace_global(src, dst, pattern, replace, count):
 def _process_file__make_backup(path, backup_ext):
     """ Create backup of file: copy it new extension.
 
-        Returns 2 elements:
-        * error message (or None if no error)
-        * path to backup file
+        Returns path to backup file.
     """
 
     root = os.path.dirname(path)
     backup_path = os.path.join(root, path + backup_ext)
 
     if os.path.exists(backup_path):
-        return 'Backup path: "{0}" for file "{1}" already exists, file omited'.format(backup_path, path), backup_path
+        raise SubstException('Backup path: "{0}" for file "{1}" already exists, file omited'.format(backup_path, path))
 
     try:
         shutil.copy2(path, backup_path)
     except (shutil.Error, IOError) as ex:
-        return 'Cannot create backup for "{0}": {1}'.format(path, ex), backup_path
+        raise SubstException('Cannot create backup for "{0}": {1}'.format(path, ex))
 
-    return None, backup_path
+    return backup_path
 
 def process_file(path, replace_func, cfg):
     """ Process single file: open, read, make backup and replace data.
@@ -350,16 +348,15 @@ def process_file(path, replace_func, cfg):
         debug(path)
 
     if not os.path.exists(path):
-        return 'Path "{0}" doesn\'t exists'.format(path),
+        raise SubstException('Path "{0}" doesn\'t exists'.format(path))
 
     if not os.path.isfile(path) or os.path.islink(path):
-        return 'Path "{0}" is not a regular file'.format(path)
+        raise SubstException('Path "{0}" is not a regular file'.format(path))
 
     if not cfg.no_backup:
-        err, backup_path = _process_file__make_backup(path, cfg.ext)
-        if err:
-            return err
-        elif cfg.debug:
+        backup_path = _process_file__make_backup(path, cfg.ext)
+
+        if cfg.debug:
             debug('created backup file: "{0}"'.format(backup_path), 1)
 
     if not cfg.stdout:
@@ -388,7 +385,7 @@ def process_file(path, replace_func, cfg):
             os.rename(tmp_path, path)
             tmp_fh.close()
     except OSError as ex:
-        return 'Error replacing "{0}" with "{1}": {2}'.format(path, tmp_path, ex)
+        raise('Error replacing "{0}" with "{1}": {2}'.format(path, tmp_path, ex))
     else:
         if cfg.debug:
             debug('moved temporary file to original', 1)
@@ -411,9 +408,10 @@ def main():
 
     else:
         for path in args.files:
-            err_msg = process_file(path, replace_func, args)
-            if err_msg:
-                errmsg(err_msg, int(args.verbose or args.debug))
+            try:
+                process_file(path, replace_func, args)
+            except SubstException as ex:
+                errmsg(ex.message, int(args.verbose or args.debug))
 
 if __name__ == '__main__':
     main()
