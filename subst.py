@@ -256,11 +256,11 @@ def parse_args (args):
         p.error ('must be provided --pattern and --replace options, or --pattern_and_replace.')
 
     try:
-        args.ext = get_ext (args)
-        args.pattern, args.replace, args.count = prepare_pattern_data (args)
-        args.replace = prepare_replacement (args.replace, args.eval)
-    except ParserException, e:
-        p.error (e)
+        args.ext = get_ext(args)
+        args.pattern, args.replace, args.count = prepare_pattern_data(args)
+        args.replace = prepare_replacement(args.replace, args.eval)
+    except ParserException as ex:
+        p.error(ex)
 
     return args
 
@@ -323,12 +323,12 @@ def main ():
                     continue
 
                 try:
-                    shutil.copy2 (path, backup_path)
-                except shutil.Error, e:
-                    errmsg ('Cannot create backup for "{0}": {1}'.format (path, e), int (args.verbose or args.debug))
+                    shutil.copy2(path, backup_path)
+                except shutil.Error as ex:
+                    errmsg('Cannot create backup for "{0}": {1}'.format(path, ex), int(args.verbose or args.debug))
                     continue
-                except IOError, e:
-                    errmsg ('Cannot create backup for "{0}": {1}'.format (path, e), int (args.verbose or args.debug))
+                except IOError as ex:
+                    errmsg('Cannot create backup for "{0}": {1}'.format(path, ex), int(args.verbose or args.debug))
                     continue
 
                 if args.debug:
@@ -339,12 +339,12 @@ def main ():
                 tmp_fh = os.fdopen (tmp_fh, 'w')
 
                 try:
-                    shutil.copy2 (path, tmp_path)
-                except shutil.Error, e:
-                    errmsg ('Cannot create temporary file "{0}" for "{1}": {2}'.format (tmp_path, path, e), int (args.verbose or args.debug))
+                    shutil.copy2(path, tmp_path)
+                except shutil.Error as ex:
+                    errmsg('Cannot create temporary file "{0}" for "{1}": {2}'.format(tmp_path, path, ex), int(args.verbose or args.debug))
                     continue
-                except IOError, e:
-                    errmsg ('Cannot create temporary file "{0}" for "{1}": {2}'.format (tmp_path, path, e), int (args.verbose or args.debug))
+                except IOError as ex:
+                    errmsg('Cannot create temporary file "{0}" for "{1}": {2}'.format(tmp_path, path, ex), int(args.verbose or args.debug))
                     continue
                 else:
                     if args.debug:
@@ -359,10 +359,10 @@ def main ():
                         debug ('{0} replacements'.format (cnt), 1)
 
                 if not args.stdout:
-                    os.rename (tmp_path, path)
-                    tmp_fh.close ()
-            except OSError, e:
-                errmsg ('Error replacing "{0}" with "{1}": {2}'.format (path, tmp_path, e), int (args.verbose or args.debug))
+                    os.rename(tmp_path, path)
+                    tmp_fh.close()
+            except OSError as ex:
+                errmsg('Error replacing "{0}" with "{1}": {2}'.format(path, tmp_path, ex), int(args.verbose or args.debug))
                 continue
             else:
                 if args.debug:
