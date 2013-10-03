@@ -340,6 +340,32 @@ def _process_file__make_backup(path, backup_ext):
 
     return backup_path
 
+def _process_file__handle(src_path, tmp_fh, cfg, replace_func):
+    with open(src_path, 'r') as fh_src:
+        cnt = replace_func(fh_src, tmp_fh, cfg.pattern, cfg.replace, cfg.count)
+        if cfg.verbose or cfg.debug:
+            debug('{0} replacements'.format(cnt), 1)
+
+def _process_file__regular(src_path, cfg, replace_func):
+    tmp_fh, tmp_path = tempfile.mkstemp()
+    tmp_fh = os.fdopen(tmp_fh, 'w')
+
+    _process_file__handle(src_path, tmp_fh, cfg, replace_func)
+
+    try:
+        os.rename(tmp_path, src_path)
+    except OSError as ex:
+        raise('Error replacing "{0}" with "{1}": {2}'.format(src_path, tmp_path, ex))
+    else:
+        if cfg.debug:
+            debug('moved temporary file to original', 1)
+
+    try:
+        tmp_fh.close()
+    except:
+        pass
+
+
 def process_file(path, replace_func, cfg):
     """ Process single file: open, read, make backup and replace data.
     """
@@ -359,34 +385,13 @@ def process_file(path, replace_func, cfg):
         if cfg.debug:
             debug('created backup file: "{0}"'.format(backup_path), 1)
 
-    if not cfg.stdout:
-        tmp_fh, tmp_path = tempfile.mkstemp()
-        tmp_fh = os.fdopen(tmp_fh, 'w')
-
-        try:
-            shutil.copy2(path, tmp_path)
-        except (shutil.Error, IOError) as ex:
-            raise SubstException('Cannot create temporary file "{0}" for "{1}": {2}'.format(tmp_path, path, ex))
-        else:
-            if cfg.debug:
-                debug('created temporary copy: "{0}"'.format(tmp_path), 1)
-    else:
-        tmp_fh = sys.stdout
-
     try:
-        with open(path, 'r') as fh_src:
-            cnt = replace_func(fh_src, tmp_fh, cfg.pattern, cfg.replace, cfg.count)
-            if cfg.verbose or cfg.debug:
-                debug('{0} replacements'.format(cnt), 1)
-
-        if not cfg.stdout:
-            os.rename(tmp_path, path)
-            tmp_fh.close()
-    except OSError as ex:
-        raise('Error replacing "{0}" with "{1}": {2}'.format(path, tmp_path, ex))
-    else:
-        if cfg.debug:
-            debug('moved temporary file to original', 1)
+        if cfg.stdout:
+            _process_file__handle(path, sys.stdout, cfg, replace_func)
+        else:
+            _process_file__regular(path, cfg, replace_func)
+    except SubstException as ex:
+        errmsg(ex)
 
 def main():
     """ Run tool: parse input arguments, read data, replace and save or display.
