@@ -373,7 +373,7 @@ def _process_file__regular(src_path, cfg, replace_func):
 
     try:
         tmp_fh.close()
-    except:
+    except:  # pylint: disable-msg=bare-except
         pass
 
 
