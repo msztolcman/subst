@@ -43,18 +43,18 @@ def get_ext (args):
 
     return '.' + args.ext
 
-def prepare_replacement (r, to_eval=False):
+def prepare_replacement(repl, to_eval=False):
     """ If to_eval argument is True, then compile replace argument
         as valid Python code and return function which can be passed
         to re.sub or re.subn functions.
     """
     if not to_eval:
-        return r
+        return repl
 
-    def repl (m):
-        return eval (r, { '__builtins__': __builtins__ }, { 'm': m })
+    def _(match):
+        return eval(repl, { '__builtins__': __builtins__ }, { 'm': match })
 
-    return repl
+    return _
 
 def prepare_pattern_data(args):  # pylint: disable-msg=too-many-branches
     """ Read arguments from argparse.ArgumentParser instance, and
