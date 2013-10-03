@@ -340,13 +340,24 @@ def _process_file__make_backup(path, backup_ext):
 
     return backup_path
 
-def _process_file__handle(src_path, tmp_fh, cfg, replace_func):
+def _process_file__handle(src_path, dst_fh, cfg, replace_func):
+    """ Read data from `src_path`, replace data with `replace_func` and
+        save it to `dst_fh`.
+    """
+
     with open(src_path, 'r') as fh_src:
-        cnt = replace_func(fh_src, tmp_fh, cfg.pattern, cfg.replace, cfg.count)
+        cnt = replace_func(fh_src, dst_fh, cfg.pattern, cfg.replace, cfg.count)
         if cfg.verbose or cfg.debug:
             debug('{0} replacements'.format(cnt), 1)
 
 def _process_file__regular(src_path, cfg, replace_func):
+    """ Read data from `src_path`, replace data with `replace_func` and
+        save it.
+
+        It's safe operation - first save data to temporary file, and then try to rename
+        new file to old one.
+    """
+
     tmp_fh, tmp_path = tempfile.mkstemp()
     tmp_fh = os.fdopen(tmp_fh, 'w')
 
