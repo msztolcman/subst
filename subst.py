@@ -308,6 +308,8 @@ def replace_global(src, dst, pattern, replace, count):
     return ret
 
 def main():
+    """ Run tool: parse input arguments, read data, replace and save or display.
+    """
     args = parse_args(sys.argv[1:])
 
     if args.version:
