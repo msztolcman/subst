@@ -71,7 +71,7 @@ def prepare_replacement(repl, to_eval=False):
     if not to_eval:
         return repl
 
-    def _(match):
+    def _(match):  # pylint: disable-msg=missing-docstring
         return eval(repl, { '__builtins__': __builtins__ }, { 'm': match })
 
     return _
