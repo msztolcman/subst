@@ -365,10 +365,8 @@ def process_file(path, replace_func, cfg):
 
         try:
             shutil.copy2(path, tmp_path)
-        except shutil.Error as ex:
-            return 'Cannot create temporary file "{0}" for "{1}": {2}'.format(tmp_path, path, ex)
-        except IOError as ex:
-            return 'Cannot create temporary file "{0}" for "{1}": {2}'.format(tmp_path, path, ex)
+        except (shutil.Error, IOError) as ex:
+            raise SubstException('Cannot create temporary file "{0}" for "{1}": {2}'.format(tmp_path, path, ex))
         else:
             if cfg.debug:
                 debug('created temporary copy: "{0}"'.format(tmp_path), 1)
