@@ -344,18 +344,15 @@ def process_file(path, replace_func, cfg):
         debug(path)
 
     if not os.path.exists(path):
-        errmsg('Path "{0}" doesn\'t exists'.format(path), int(cfg.verbose or cfg.debug))
-        return
+        return 'Path "{0}" doesn\'t exists'.format(path),
 
     if not os.path.isfile(path) or os.path.islink(path):
-        errmsg('Path "{0}" is not a regular file'.format(path), int(cfg.verbose or cfg.debug))
-        return
+        return 'Path "{0}" is not a regular file'.format(path)
 
     if not cfg.no_backup:
         err, backup_path = _process_file__make_backup(path, cfg.ext)
         if err:
-            errmsg(err, int(cfg.verbose or cfg.debug))
-            return
+            return err
         elif cfg.debug:
             debug('created backup file: "{0}"'.format(backup_path), 1)
 
@@ -366,11 +363,9 @@ def process_file(path, replace_func, cfg):
         try:
             shutil.copy2(path, tmp_path)
         except shutil.Error as ex:
-            errmsg('Cannot create temporary file "{0}" for "{1}": {2}'.format(tmp_path, path, ex), int(cfg.verbose or cfg.debug))
-            return
+            return 'Cannot create temporary file "{0}" for "{1}": {2}'.format(tmp_path, path, ex)
         except IOError as ex:
-            errmsg('Cannot create temporary file "{0}" for "{1}": {2}'.format(tmp_path, path, ex), int(cfg.verbose or cfg.debug))
-            return
+            return 'Cannot create temporary file "{0}" for "{1}": {2}'.format(tmp_path, path, ex)
         else:
             if cfg.debug:
                 debug('created temporary copy: "{0}"'.format(tmp_path), 1)
@@ -387,8 +382,7 @@ def process_file(path, replace_func, cfg):
             os.rename(tmp_path, path)
             tmp_fh.close()
     except OSError as ex:
-        errmsg('Error replacing "{0}" with "{1}": {2}'.format(path, tmp_path, ex), int(cfg.verbose or cfg.debug))
-        return
+        return 'Error replacing "{0}" with "{1}": {2}'.format(path, tmp_path, ex)
     else:
         if cfg.debug:
             debug('moved temporary file to original', 1)
@@ -411,7 +405,9 @@ def main():
 
     else:
         for path in args.files:
-            process_file(path, replace_func, args)
+            err_msg = process_file(path, replace_func, args)
+            if err_msg:
+                errmsg(err_msg, int(args.verbose or args.debug))
 
 if __name__ == '__main__':
     main()
