@@ -134,8 +134,8 @@ def prepare_pattern_data(args):  # pylint: disable-msg=too-many-branches
             if 'm' in _flags:
                 flags |= re.MULTILINE
 
-        except ValueError, e:
-            raise ParserException ('Bad pattern specified: {0}'.format (args.pattern_and_replace))
+        except ValueError:
+            raise ParserException('Bad pattern specified: {0}'.format(args.pattern_and_replace))
 
         return re.compile (pattern, flags), replace, count
     else:
