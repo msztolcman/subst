@@ -366,7 +366,7 @@ def _process_file__regular(src_path, cfg, replace_func):
     try:
         os.rename(tmp_path, src_path)
     except OSError as ex:
-        raise('Error replacing "{0}" with "{1}": {2}'.format(src_path, tmp_path, ex))
+        raise SubstException('Error replacing "{0}" with "{1}": {2}'.format(src_path, tmp_path, ex))
     else:
         if cfg.debug:
             debug('moved temporary file to original', 1)
