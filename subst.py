@@ -25,7 +25,13 @@ __version__ = '0.2'
 
 DEFAULT_BACKUP_EXTENSION = 'bak'
 
-class ParserException(Exception):
+class SubstException(Exception):
+    """ Exception raised when there is some error.
+    """
+
+    pass
+
+class ParserException(SubstException):
     """ Exception raised when pattern given by user has errors.
     """
 
