@@ -4,7 +4,7 @@ subst
 subst.py is simple utility to replace one string into another in given list of files.
 
 But why?
-========
+--------
 
 1. There is `sed` for example?
 
@@ -17,7 +17,7 @@ But why?
     simpler to use.
 
 OK, so how to use it?
-=====================
+---------------------
 
 Simple
 ------
@@ -123,7 +123,7 @@ Look at result:
     passed to --replace is eval-ed, so any not safe code will be executed!
 
 Some examples?
-==============
+--------------
 
 Simple replace word 'Hello' with 'Hi' in data read from STDIN:
 
