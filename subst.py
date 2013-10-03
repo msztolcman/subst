@@ -11,7 +11,7 @@ import sys
 import tempfile
 import textwrap
 
-from pprint import pprint, pformat
+from pprint import pprint, pformat  # pylint: disable-msg=unused-import
 
 __version__ = '0.1'
 
@@ -56,7 +56,7 @@ def prepare_replacement (r, to_eval=False):
 
     return repl
 
-def prepare_pattern_data (args):
+def prepare_pattern_data(args):  # pylint: disable-msg=too-many-branches
     """ Read arguments from argparse.ArgumentParser instance, and
         parse it to find correct values for arguments:
             * pattern
@@ -160,7 +160,7 @@ def wrap_text (s):
 def parse_args (args):
     """ Parse arguments passed to script, validate it, compile if needed and return.
     """
-    p = argparse.ArgumentParser (
+    p = argparse.ArgumentParser(  # pylint: disable-msg=invalid-name
         description='Replace PATTERN with REPLACE in many files.',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=wrap_text ("Miscellaneous notes:\n"
