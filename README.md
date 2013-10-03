@@ -132,7 +132,7 @@ Simple replace word 'Hello' with 'Hi' in data read from STDIN:
 Replace every IP address in form: 192.168.1.X (where X is few digits - single octet)
 with 192.168.0.X in `/etc/hosts`:
 
-    substr.py -p '(192\.168)\.1\.(10)' -r '\1.0.\2' /etc/hosts
+    subst.py -p '(192\.168)\.1\.(10)' -r '\1.0.\2' /etc/hosts
 
 License
 =======
