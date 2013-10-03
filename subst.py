@@ -18,19 +18,38 @@ __version__ = '0.1'
 DEFAULT_BACKUP_EXTENSION = 'bak'
 
 class ParserException(Exception):
+    """ Exception raised when pattern given by user has errors.
+    """
+
     pass
 
 def show_version():
+    """ Show version info and exit.
+    """
+
     msg('{0}: version {1}'.format(os.path.basename(sys.argv[0]), __version__))
     sys.exit(0)
 
 def errmsg(message, indent=0, end=None):
+    """ Display error message.
+
+        Prints always to stderr.
+    """
+
     print((' ' * indent * 4) + message, file=sys.stderr, end=end)
 
 def msg(message, indent=0, end=None):
+    """ Display message.
+    """
+
     print((' ' * indent * 4) + message, end=end)
 
 def debug(message, indent=0, end=None):
+    """ Display debug message.
+
+        Prints always to stderr.
+    """
+
     print((' ' * indent * 4) + message, file=sys.stderr, end=end)
 
 def get_ext(args):
