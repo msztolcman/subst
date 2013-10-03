@@ -315,6 +315,84 @@ def replace_global(src, dst, pattern, replace, count):
     dst.write(data)
     return ret
 
+def _process_file__make_backup(path, backup_ext):
+    """ Create backup of file: copy it new extension.
+
+        Returns 2 elements:
+        * error message (or None if no error)
+        * path to backup file
+    """
+
+    root = os.path.dirname(path)
+    backup_path = os.path.join(root, path + backup_ext)
+
+    if os.path.exists(backup_path):
+        return 'Backup path: "{0}" for file "{1}" already exists, file omited'.format(backup_path, path), backup_path
+
+    try:
+        shutil.copy2(path, backup_path)
+    except (shutil.Error, IOError) as ex:
+        return 'Cannot create backup for "{0}": {1}'.format(path, ex), backup_path
+
+    return None, backup_path
+
+def process_file(path, replace_func, cfg):
+    """ Process single file: open, read, make backup and replace data.
+    """
+
+    if cfg.verbose or cfg.debug:
+        debug(path)
+
+    if not os.path.exists(path):
+        errmsg('Path "{0}" doesn\'t exists'.format(path), int(cfg.verbose or cfg.debug))
+        return
+
+    if not os.path.isfile(path) or os.path.islink(path):
+        errmsg('Path "{0}" is not a regular file'.format(path), int(cfg.verbose or cfg.debug))
+        return
+
+    if not cfg.no_backup:
+        err, backup_path = _process_file__make_backup(path, cfg.ext)
+        if err:
+            errmsg(err, int(cfg.verbose or cfg.debug))
+            return
+        elif cfg.debug:
+            debug('created backup file: "{0}"'.format(backup_path), 1)
+
+    if not cfg.stdout:
+        tmp_fh, tmp_path = tempfile.mkstemp()
+        tmp_fh = os.fdopen(tmp_fh, 'w')
+
+        try:
+            shutil.copy2(path, tmp_path)
+        except shutil.Error as ex:
+            errmsg('Cannot create temporary file "{0}" for "{1}": {2}'.format(tmp_path, path, ex), int(cfg.verbose or cfg.debug))
+            return
+        except IOError as ex:
+            errmsg('Cannot create temporary file "{0}" for "{1}": {2}'.format(tmp_path, path, ex), int(cfg.verbose or cfg.debug))
+            return
+        else:
+            if cfg.debug:
+                debug('created temporary copy: "{0}"'.format(tmp_path), 1)
+    else:
+        tmp_fh = sys.stdout
+
+    try:
+        with open(path, 'r') as fh_src:
+            cnt = replace_func(fh_src, tmp_fh, cfg.pattern, cfg.replace, cfg.count)
+            if cfg.verbose or cfg.debug:
+                debug('{0} replacements'.format(cnt), 1)
+
+        if not cfg.stdout:
+            os.rename(tmp_path, path)
+            tmp_fh.close()
+    except OSError as ex:
+        errmsg('Error replacing "{0}" with "{1}": {2}'.format(path, tmp_path, ex), int(cfg.verbose or cfg.debug))
+        return
+    else:
+        if cfg.debug:
+            debug('moved temporary file to original', 1)
+
 def main():
     """ Run tool: parse input arguments, read data, replace and save or display.
     """
@@ -333,71 +411,7 @@ def main():
 
     else:
         for path in args.files:
-            if args.verbose or args.debug:
-                debug(path)
-
-            if not os.path.exists(path):
-                errmsg('Path "{0}" doesn\'t exists'.format(path), int(args.verbose or args.debug))
-                continue
-
-            if not os.path.isfile(path) or os.path.islink(path):
-                errmsg('Path "{0}" is not a regular file'.format(path), int(args.verbose or args.debug))
-                continue
-
-            if not args.no_backup:
-                root = os.path.dirname(path)
-                backup_path = os.path.join(root, path + args.ext)
-
-                if os.path.exists(backup_path):
-                    errmsg('Backup path: "{0}" for file "{1}" already exists, file omited'.format(backup_path, path),
-                           int(args.verbose or args.debug))
-                    continue
-
-                try:
-                    shutil.copy2(path, backup_path)
-                except shutil.Error as ex:
-                    errmsg('Cannot create backup for "{0}": {1}'.format(path, ex), int(args.verbose or args.debug))
-                    continue
-                except IOError as ex:
-                    errmsg('Cannot create backup for "{0}": {1}'.format(path, ex), int(args.verbose or args.debug))
-                    continue
-
-                if args.debug:
-                    debug('created backup file: "{0}"'.format(backup_path), 1)
-
-            if not args.stdout:
-                tmp_fh, tmp_path = tempfile.mkstemp()
-                tmp_fh = os.fdopen(tmp_fh, 'w')
-
-                try:
-                    shutil.copy2(path, tmp_path)
-                except shutil.Error as ex:
-                    errmsg('Cannot create temporary file "{0}" for "{1}": {2}'.format(tmp_path, path, ex), int(args.verbose or args.debug))
-                    continue
-                except IOError as ex:
-                    errmsg('Cannot create temporary file "{0}" for "{1}": {2}'.format(tmp_path, path, ex), int(args.verbose or args.debug))
-                    continue
-                else:
-                    if args.debug:
-                        debug('created temporary copy: "{0}"'.format(tmp_path), 1)
-            else:
-                tmp_fh = sys.stdout
-
-            try:
-                with open(path, 'r') as fh_src:
-                    cnt = replace_func(fh_src, tmp_fh, args.pattern, args.replace, args.count)
-                    if args.verbose or args.debug:
-                        debug('{0} replacements'.format(cnt), 1)
-
-                if not args.stdout:
-                    os.rename(tmp_path, path)
-                    tmp_fh.close()
-            except OSError as ex:
-                errmsg('Error replacing "{0}" with "{1}": {2}'.format(path, tmp_path, ex), int(args.verbose or args.debug))
-                continue
-            else:
-                if args.debug:
-                    debug('moved temporary file to original', 1)
+            process_file(path, replace_func, args)
 
 if __name__ == '__main__':
     main()
