@@ -30,37 +30,205 @@
 
       </header>
       <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <h1>
+<a name="subst" class="anchor" href="#subst"><span class="octicon octicon-link"></span></a>subst</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p><code>subst</code> is simple utility to replace one string into another in given list of files.</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<h2>
+<a name="but-why" class="anchor" href="#but-why"><span class="octicon octicon-link"></span></a>But why?</h2>
+
+<ol>
+<li>
+<p>There is <code>sed</code> for example?</p>
+
+<p>Yes, it is. But <code>sed</code> use regexps engine called "Basic Regular Expressions", or "Extended
+Regular Expression". PCRE is much more widely used dialect.</p>
+</li>
+<li>
+<p>So I can use Perl!</p>
+
+<p>Of course you can. But not everyone know how to use Perl. I know, but <code>subst</code> is IMHO
+simpler to use.</p>
+</li>
+</ol><h2>
+<a name="ok-so-how-to-use-it" class="anchor" href="#ok-so-how-to-use-it"><span class="octicon octicon-link"></span></a>OK, so how to use it?</h2>
+
+<h2>
+<a name="simple" class="anchor" href="#simple"><span class="octicon octicon-link"></span></a>Simple</h2>
+
+<pre><code>echo 'Hello World!' | subst -s 's/Hello/Hi/' -
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>or:</p>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<pre><code>subst -p '(192\.168)\.1\.(10)' -r '\1.0.\2' /etc/hosts
+</code></pre>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<h2>
+<a name="more" class="anchor" href="#more"><span class="octicon octicon-link"></span></a>More</h2>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<p>Everything is in help :) Just execute:</p>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<pre><code>python subst --help
+</code></pre>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<p>Look at result:</p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<pre><code>% python subst --help
+usage: subst [-h] [-p PATTERN] [-r REPLACE] [--eval-replace] [-t STRING]
+                [-s "s/PAT/REP/gixsm"] [-c COUNT] [-l] [-i]
+                [--pattern-dot-all] [--pattern-verbose] [--pattern-multiline]
+                [-b] [-e EXT] [--stdin] [--stdout] [--verbose] [--debug] [-v]
+                [files [files ...]]
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+Replace PATTERN with REPLACE in many files.
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+positional arguments:
+files                 file to parse.
+
+optional arguments:
+-h, --help            show this help message and exit
+-p PATTERN, --pattern PATTERN
+                      pattern to replace for. Supersede
+                      --pattern_and_replace. Required if --replace is
+                      specified.
+-r REPLACE, --replace REPLACE
+                      replacement. Supersede --pattern_and_replace. Required
+                      if --pattern is specified.
+--eval-replace        if specified, make eval data from --replace(should be
+                      valid Python code). Ignored with --pattern_and_replace
+                      argument.
+-t STRING, --string STRING
+                      if specified, treats --pattern as string, not as
+                      regular expression. Ignored with --pattern_and_replace
+                      argument.
+-s "s/PAT/REP/gixsm", --pattern_and_replace "s/PAT/REP/gixsm"
+                      pattern and replacement in one:
+                      s/pattern/replace/g(pattern is always regular
+                      expression, /g is optional and stands for --count=0,
+                      /i == --ignore-case, /s == --pattern-dot-all, /m ==
+                      --pattern-multiline).
+-c COUNT, --count COUNT
+                      make COUNT replacements for every file(0 make
+                      unlimited changes, default).
+-l, --linear          apply pattern for every line separately. Without this
+                      flag whole file is read into memory.
+-i, --ignore-case     ignore case of characters when matching
+--pattern-dot-all     with this flag, dot(.) character in pattern match also
+                      new line character (see:
+                      http://docs.python.org/2/library/re.html#re.DOTALL).
+--pattern-verbose     with this flag pattern can be passed as verbose(see:
+                      http://docs.python.org/2/library/re.html#re.VERBOSE).
+--pattern-multiline   with this flag pattern can be passed as multiline(see:
+                      http://docs.python.org/2/library/re.html#re.MULTILINE).
+-b, --no-backup       disable creating backup of modified files.
+-e EXT, --backup-extension EXT
+                      extension for backuped files(ignore if no backup is
+                      created), without leading dot. Defaults to: "bak".
+--stdin               read data from STDIN(implies --stdout)
+--stdout              output data to STDOUT instead of change files in-
+                      place(implies --no-backup)
+--verbose             show files and how many replacements was done
+--debug               show more infos
+-v, --version         show version and exit
+
+Miscellaneous notes:
+* regular expressions engine used here is PCRE, dialect from Python
+* is required to pass either --pattern and -replace, or
+--pattern_and_replace argument
+* if pattern passed to --pattern_and_replace has /g modifier, it
+overwrites --count value
+* if neither /g modifier nor --count argument is passed, assume that
+--count is equal 1
+* if only --count is given, this value is used
+* if --eval-replace is given, --replace must be valid Python code, where
+can be used m variable.m holds MatchObject instance (see:
+http://http://docs.python.org/2/library/re.html#match-objects, for
+example:
+    --eval-replace --replace 'm.group(1).lower()'
+* regular expressions with non linear search read whole file to yours
+computer memory - if file size is bigger then you have memory in your
+computer, it fails
+* parsing expression passed to --pattern_and_replace argument is very
+simple - if you use / as delimiter, then in your expression can't be
+used this character anymore. If you need to use same character as
+delimiter and in expression, then better use --pattern and --replace
+argument
+
+Security notes:
+* be carefull with --eval-replace argument. When it's given, value
+passed to --replace is eval-ed, so any not safe code will be executed!
+</code></pre>
+
+<h2>
+<a name="some-examples" class="anchor" href="#some-examples"><span class="octicon octicon-link"></span></a>Some examples?</h2>
+
+<p>Simple replace word 'Hello' with 'Hi' in data read from STDIN:</p>
+
+<pre><code>echo 'Hello World!' | subst -s 's/Hello/Hi/' -
+</code></pre>
+
+<p>Replace every IP address in form: 192.168.1.X (where X is few digits - single octet)
+with 192.168.0.X in <code>/etc/hosts</code>:</p>
+
+<pre><code>subst -p '(192\.168)\.1\.(10)' -r '\1.0.\2' /etc/hosts
+</code></pre>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p><code>subst</code> should work on any platform where <a href="http://python.org">Python</a> is available, it means Linux, Windows, MacOS X etc. There is no dependencies, plain Python power :)</p>
+
+<p>To install, go to <a href="https://github.com/mysz/subst/releases">GitHub releases</a>, download newest release, unpack and put somewhere in <code>PATH</code> (ie. <code>~/bin</code> or <code>/usr/local/bin</code>).</p>
+
+<p>If You want to install newest unstable version, then just copy file to your PATH, for example:</p>
+
+<pre><code>curl https://raw.github.com/mysz/subst/master/subst.py &gt; /usr/local/bin/subst
+</code></pre>
+
+<p>or:</p>
+
+<pre><code>wget https://raw.github.com/mysz/subst/master/subst.py -O /usr/local/bin/subst
+</code></pre>
+
+<p>Voila!</p>
+
+<h2>
+<a name="authors" class="anchor" href="#authors"><span class="octicon octicon-link"></span></a>Authors</h2>
+
+<p>Marcin Sztolcman <a href="mailto:marcin@urzenia.net">marcin@urzenia.net</a></p>
+
+<h2>
+<a name="contact" class="anchor" href="#contact"><span class="octicon octicon-link"></span></a>Contact</h2>
+
+<p>If you like or dislike this software, please do not hesitate to tell me about this me via email (<a href="mailto:marcin@urzenia.net">marcin@urzenia.net</a>).</p>
+
+<p>If you find bug or have an idea to enhance this tool, please use GitHub's <a href="https://github.com/mysz/subst/issues">issues</a>.</p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>The MIT License (MIT)</p>
+
+<p>Copyright (c) 2013 Marcin Sztolcman</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
       </section>
       <footer>
         <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
