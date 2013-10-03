@@ -77,12 +77,12 @@ def _parse_args__get_ext(args):
 
     return '.' + args.ext
 
-def _parse_args__eval_replacement(r):
+def _parse_args__eval_replacement(repl):
     """ Compile replace argument as valid Python code and return
         function which can be passed to re.sub or re.subn functions.
     """
-    def repl(m):
-        return eval (r, { '__builtins__': __builtins__ }, { 'm': m })
+    def _(match):
+        return eval (repl, { '__builtins__': __builtins__ }, { 'm': match })
 
     return _
 
