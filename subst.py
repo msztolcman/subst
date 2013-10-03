@@ -21,7 +21,7 @@ import textwrap
 
 from pprint import pprint, pformat  # pylint: disable-msg=unused-import
 
-__version__ = '0.1'
+__version__ = '0.2'
 
 DEFAULT_BACKUP_EXTENSION = 'bak'
 
