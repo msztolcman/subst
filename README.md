@@ -3,6 +3,11 @@ subst
 
 `subst` is simple utility to replace one string into another in given list of files.
 
+Current stable version
+----------------------
+
+0.2
+
 But why?
 --------
 
