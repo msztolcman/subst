@@ -45,56 +45,56 @@ Look at result:
                     [files [files ...]]
 
     Replace PATTERN with REPLACE in many files.
-    
+
     positional arguments:
     files                 file to parse.
-    
+
     optional arguments:
     -h, --help            show this help message and exit
     -p PATTERN, --pattern PATTERN
-                            pattern to replace for. Supersede
-                            --pattern_and_replace. Required if --replace is
-                            specified.
+                          pattern to replace for. Supersede
+                          --pattern_and_replace. Required if --replace is
+                          specified.
     -r REPLACE, --replace REPLACE
-                            replacement. Supersede --pattern_and_replace. Required
-                            if --pattern is specified.
-    --eval-replace        if specified, make eval data from --replace (should be
-                            valid Python code). Ignored with --pattern_and_replace
-                            argument.
+                          replacement. Supersede --pattern_and_replace. Required
+                          if --pattern is specified.
+    --eval-replace        if specified, make eval data from --replace(should be
+                          valid Python code). Ignored with --pattern_and_replace
+                          argument.
     -t STRING, --string STRING
-                            if specified, treats --pattern as string, not as
-                            regular expression. Ignored with --pattern_and_replace
-                            argument.
+                          if specified, treats --pattern as string, not as
+                          regular expression. Ignored with --pattern_and_replace
+                          argument.
     -s "s/PAT/REP/gixsm", --pattern_and_replace "s/PAT/REP/gixsm"
-                            pattern and replacement in one: s/pattern/replace/g
-                            (pattern is always regular expression, /g is optional
-                            and stands for --count=0, /i == --ignore-case, /s ==
-                            --pattern-dot-all, /m == --pattern-multiline).
+                          pattern and replacement in one:
+                          s/pattern/replace/g(pattern is always regular
+                          expression, /g is optional and stands for --count=0,
+                          /i == --ignore-case, /s == --pattern-dot-all, /m ==
+                          --pattern-multiline).
     -c COUNT, --count COUNT
-                            make COUNT replacements for every file (0 make
-                            unlimited changes, default).
+                          make COUNT replacements for every file(0 make
+                          unlimited changes, default).
     -l, --linear          apply pattern for every line separately. Without this
-                            flag whole file is read into memory.
+                          flag whole file is read into memory.
     -i, --ignore-case     ignore case of characters when matching
-    --pattern-dot-all     with this flag, dot (.) character in pattern match
-                            also new line character (see:
-                            http://docs.python.org/2/library/re.html#re.DOTALL).
-    --pattern-verbose     with this flag pattern can be passed as verbose (see:
-                            http://docs.python.org/2/library/re.html#re.VERBOSE).
-    --pattern-multiline   with this flag pattern can be passed as multiline
-                            (see: http://docs.python.org/2/library/re.html#re.MULT
-                            ILINE).
+    --pattern-dot-all     with this flag, dot(.) character in pattern match also
+                          new line character (see:
+                          http://docs.python.org/2/library/re.html#re.DOTALL).
+    --pattern-verbose     with this flag pattern can be passed as verbose(see:
+                          http://docs.python.org/2/library/re.html#re.VERBOSE).
+    --pattern-multiline   with this flag pattern can be passed as multiline(see:
+                          http://docs.python.org/2/library/re.html#re.MULTILINE).
     -b, --no-backup       disable creating backup of modified files.
     -e EXT, --backup-extension EXT
-                            extension for backuped files (ignore if no backup is
-                            created), without leading dot. Defaults to: "bak".
-    --stdin               read data from STDIN (implies --stdout)
-    --stdout              output data to STDOUT instead of change files in-place
-                            (implies --no-backup)
+                          extension for backuped files(ignore if no backup is
+                          created), without leading dot. Defaults to: "bak".
+    --stdin               read data from STDIN(implies --stdout)
+    --stdout              output data to STDOUT instead of change files in-
+                          place(implies --no-backup)
     --verbose             show files and how many replacements was done
     --debug               show more infos
     -v, --version         show version and exit
-    
+
     Miscellaneous notes:
     * regular expressions engine used here is PCRE, dialect from Python
     * is required to pass either --pattern and -replace, or
@@ -108,7 +108,7 @@ Look at result:
     can be used m variable.m holds MatchObject instance (see:
     http://http://docs.python.org/2/library/re.html#match-objects, for
     example:
-        --eval-replace --replace 'm.group (1).lower ()'
+        --eval-replace --replace 'm.group(1).lower()'
     * regular expressions with non linear search read whole file to yours
     computer memory - if file size is bigger then you have memory in your
     computer, it fails
@@ -117,16 +117,10 @@ Look at result:
     used this character anymore. If you need to use same character as
     delimiter and in expression, then better use --pattern and --replace
     argument
-    
+
     Security notes:
     * be carefull with --eval-replace argument. When it's given, value
     passed to --replace is eval-ed, so any not safe code will be executed!
-    
-    Author:
-    Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
-    
-    HomePage:
-    https://github.com/mysz/subst/
 
 Some examples?
 ==============
@@ -153,6 +147,6 @@ Marcin Sztolcman <marcin@urzenia.net>
 Links
 =====
 
-* HomePage: https://github.com/mysz/subst/
+* HomePage: https://mysz.github.io/subst
 * Issues:   https://github.com/mysz/subst/issues
 
