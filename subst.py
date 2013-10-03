@@ -216,7 +216,7 @@ def parse_args(args):
             "Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net\n"
             "\n"
             "HomePage:\n"
-            "https://github.com/mysz/subst/"
+            "http://mysz.github.io/subst/"
         ),
     )
 
