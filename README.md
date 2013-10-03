@@ -1,7 +1,7 @@
 subst
 =====
 
-subst.py is simple utility to replace one string into another in given list of files.
+`subst` is simple utility to replace one string into another in given list of files.
 
 But why?
 --------
@@ -13,7 +13,7 @@ But why?
 
 2. So I can use Perl!
 
-    Of course you can. But not everyone know how to use Perl. I know, but `subst.py` is IMHO
+    Of course you can. But not everyone know how to use Perl. I know, but `subst` is IMHO
     simpler to use.
 
 OK, so how to use it?
@@ -22,23 +22,23 @@ OK, so how to use it?
 Simple
 ------
 
-    echo 'Hello World!' | subst.py -s 's/Hello/Hi/' -
+    echo 'Hello World!' | subst -s 's/Hello/Hi/' -
 
 or:
 
-    substr.py -p '(192\.168)\.1\.(10)' -r '\1.0.\2' /etc/hosts
+    subst -p '(192\.168)\.1\.(10)' -r '\1.0.\2' /etc/hosts
 
 More
 ----
 
 Everything is in help :) Just execute:
 
-    python subst.py --help
+    python subst --help
 
 Look at result:
 
-    % python subst.py --help                                          
-    usage: subst.py [-h] [-p PATTERN] [-r REPLACE] [--eval-replace] [-t STRING]
+    % python subst --help
+    usage: subst [-h] [-p PATTERN] [-r REPLACE] [--eval-replace] [-t STRING]
                     [-s "s/PAT/REP/gixsm"] [-c COUNT] [-l] [-i]
                     [--pattern-dot-all] [--pattern-verbose] [--pattern-multiline]
                     [-b] [-e EXT] [--stdin] [--stdout] [--verbose] [--debug] [-v]
@@ -127,12 +127,12 @@ Some examples?
 
 Simple replace word 'Hello' with 'Hi' in data read from STDIN:
 
-    echo 'Hello World!' | subst.py -s 's/Hello/Hi/' -
+    echo 'Hello World!' | subst -s 's/Hello/Hi/' -
 
 Replace every IP address in form: 192.168.1.X (where X is few digits - single octet)
 with 192.168.0.X in `/etc/hosts`:
 
-    subst.py -p '(192\.168)\.1\.(10)' -r '\1.0.\2' /etc/hosts
+    subst -p '(192\.168)\.1\.(10)' -r '\1.0.\2' /etc/hosts
 
 License
 =======
