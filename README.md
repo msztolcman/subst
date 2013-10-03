@@ -1,5 +1,5 @@
-What is this for?
-=================
+subst
+=====
 
 subst.py is simple utility to replace one string into another in given list of files.
 
