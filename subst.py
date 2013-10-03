@@ -141,21 +141,21 @@ def prepare_pattern_data(args):  # pylint: disable-msg=too-many-branches
     else:
         raise ParserException ('Bad pattern specified: {0}'.format (args.pattern_and_replace))
 
-def wrap_text (s):
+def wrap_text(txt):
     """ Make custom wrapper for passed text.
 
         Splits given text for lines, and for every line apply custom
         textwrap.TextWrapper settings, then return reformatted string.
     """
-    w = textwrap.TextWrapper (
+    _wrap = textwrap.TextWrapper(
         width = 72,
         expand_tabs = True,
         replace_whitespace = False,
         drop_whitespace = True,
         subsequent_indent = '  ',
     )
-    s = [ w.fill (line) for line in s.splitlines () ]
-    return "\n".join (s)
+    txt = [ _wrap.fill(line) for line in txt.splitlines() ]
+    return "\n".join(txt)
 
 def parse_args (args):
     """ Parse arguments passed to script, validate it, compile if needed and return.
