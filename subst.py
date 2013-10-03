@@ -23,14 +23,14 @@ def show_version ():
     msg ('{0}: version {1}'.format (os.path.basename (sys.argv[0]), __version__))
     sys.exit (0)
 
-def errmsg (msg, indent=0, end=None):
-    print ((' ' * indent * 4) + msg, file=sys.stderr, end=end)
+def errmsg(message, indent=0, end=None):
+    print((' ' * indent * 4) + message, file=sys.stderr, end=end)
 
-def msg (msg, indent=0, end=None):
-    print ((' ' * indent * 4) + msg, end=end)
+def msg(message, indent=0, end=None):
+    print((' ' * indent * 4) + message, end=end)
 
-def debug (msg, indent=0, end=None):
-    print ((' ' * indent * 4) + msg, file=sys.stderr, end=end)
+def debug(message, indent=0, end=None):
+    print((' ' * indent * 4) + message, file=sys.stderr, end=end)
 
 def get_ext (args):
     """ Find extension for backup files
