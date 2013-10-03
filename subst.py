@@ -17,11 +17,12 @@ __version__ = '0.1'
 
 DEFAULT_BACKUP_EXTENSION = 'bak'
 
-class ParserException (Exception): pass
+class ParserException(Exception):
+    pass
 
-def show_version ():
-    msg ('{0}: version {1}'.format (os.path.basename (sys.argv[0]), __version__))
-    sys.exit (0)
+def show_version():
+    msg('{0}: version {1}'.format(os.path.basename(sys.argv[0]), __version__))
+    sys.exit(0)
 
 def errmsg(message, indent=0, end=None):
     print((' ' * indent * 4) + message, file=sys.stderr, end=end)
@@ -32,13 +33,13 @@ def msg(message, indent=0, end=None):
 def debug(message, indent=0, end=None):
     print((' ' * indent * 4) + message, file=sys.stderr, end=end)
 
-def get_ext (args):
+def get_ext(args):
     """ Find extension for backup files
     """
     if args.no_backup:
         return ''
 
-    if args.ext is None or len (args.ext) == 0:
+    if args.ext is None or len(args.ext) == 0:
         return '.' + DEFAULT_BACKUP_EXTENSION
 
     return '.' + args.ext
@@ -88,11 +89,11 @@ def prepare_pattern_data(args):  # pylint: disable-msg=too-many-branches
 
     if args.pattern is not None and args.replace is not None:
         if args.string:
-            pattern = re.escape (args.pattern)
+            pattern = re.escape(args.pattern)
         else:
             pattern = args.pattern
 
-        return re.compile (pattern, flags), args.replace, args.count or 0
+        return re.compile(pattern, flags), args.replace, args.count or 0
 
     elif args.pattern_and_replace is not None:
         pat = args.pattern_and_replace
@@ -137,9 +138,9 @@ def prepare_pattern_data(args):  # pylint: disable-msg=too-many-branches
         except ValueError:
             raise ParserException('Bad pattern specified: {0}'.format(args.pattern_and_replace))
 
-        return re.compile (pattern, flags), replace, count
+        return re.compile(pattern, flags), replace, count
     else:
-        raise ParserException ('Bad pattern specified: {0}'.format (args.pattern_and_replace))
+        raise ParserException('Bad pattern specified: {0}'.format(args.pattern_and_replace))
 
 def wrap_text(txt):
     """ Make custom wrapper for passed text.
@@ -157,13 +158,13 @@ def wrap_text(txt):
     txt = [ _wrap.fill(line) for line in txt.splitlines() ]
     return "\n".join(txt)
 
-def parse_args (args):
+def parse_args(args):
     """ Parse arguments passed to script, validate it, compile if needed and return.
     """
     p = argparse.ArgumentParser(  # pylint: disable-msg=invalid-name
         description='Replace PATTERN with REPLACE in many files.',
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=wrap_text ("Miscellaneous notes:\n"
+        epilog=wrap_text("Miscellaneous notes:\n"
             "* regular expressions engine used here is PCRE, dialect from Python\n"
             "* is required to pass either --pattern and -replace, or --pattern_and_replace argument\n"
             "* if pattern passed to --pattern_and_replace has /g modifier, it overwrites --count value\n"
@@ -172,7 +173,7 @@ def parse_args (args):
             "* if --eval-replace is given, --replace must be valid Python code, where can be used m variable."
                 "m holds MatchObject instance (see: http://http://docs.python.org/2/library/re.html#match-objects, "
                 "for example:\n"
-            "    --eval-replace --replace 'm.group (1).lower ()'\n"
+            "    --eval-replace --replace 'm.group(1).lower()'\n"
             "* regular expressions with non linear search read whole file to yours computer memory - if file size is "
                 "bigger then you have memory in your computer, it fails\n"
             "* parsing expression passed to --pattern_and_replace argument is very simple - if you use / as delimiter, "
@@ -253,7 +254,7 @@ def parse_args (args):
             (args.pattern is None and args.replace is None and args.pattern_and_replace is None) or \
             (args.pattern is None and args.replace is not None) or \
             (args.pattern is not None and args.replace is None):
-        p.error ('must be provided --pattern and --replace options, or --pattern_and_replace.')
+        p.error('must be provided --pattern and --replace options, or --pattern_and_replace.')
 
     try:
         args.ext = get_ext(args)
@@ -264,7 +265,7 @@ def parse_args (args):
 
     return args
 
-def replace_linear (src, dst, pattern, replace, count):
+def replace_linear(src, dst, pattern, replace, count):
     """ Read data from 'src' line by line, replace some data from
         regular expression in 'pattern' with data in 'replace',
         write it to 'dst', and return quantity of replaces.
@@ -272,26 +273,26 @@ def replace_linear (src, dst, pattern, replace, count):
     ret = 0
     for line in src:
         if count == 0 or ret < count:
-            line, rest_count = pattern.subn (replace, line, max (0, count - ret))
+            line, rest_count = pattern.subn(replace, line, max(0, count - ret))
             ret += rest_count
-        dst.write (line)
+        dst.write(line)
     return ret
 
-def replace_global (src, dst, pattern, replace, count):
+def replace_global(src, dst, pattern, replace, count):
     """ Read whole file from 'src', replace some data from
         regular expression in 'pattern' with data in 'replace',
         write it to 'dst', and return quantity of replaces.
     """
-    data = src.read ()
-    data, ret = pattern.subn (replace, data, count)
-    dst.write (data)
+    data = src.read()
+    data, ret = pattern.subn(replace, data, count)
+    dst.write(data)
     return ret
 
-def main ():
-    args = parse_args (sys.argv[1:])
+def main():
+    args = parse_args(sys.argv[1:])
 
     if args.version:
-        show_version ()
+        show_version()
 
     if args.linear:
         replace_func = replace_linear
@@ -299,27 +300,28 @@ def main ():
         replace_func = replace_global
 
     if args.stdin:
-        replace_func (sys.stdin, sys.stdout, args.pattern, args.replace, args.count)
+        replace_func(sys.stdin, sys.stdout, args.pattern, args.replace, args.count)
 
     else:
         for path in args.files:
             if args.verbose or args.debug:
-                debug (path)
+                debug(path)
 
-            if not os.path.exists (path):
-                errmsg ('Path "{0}" doesn\'t exists'.format (path), int (args.verbose or args.debug))
+            if not os.path.exists(path):
+                errmsg('Path "{0}" doesn\'t exists'.format(path), int(args.verbose or args.debug))
                 continue
 
-            if not os.path.isfile (path) or os.path.islink (path):
-                errmsg ('Path "{0}" is not a regular file'.format (path), int (args.verbose or args.debug))
+            if not os.path.isfile(path) or os.path.islink(path):
+                errmsg('Path "{0}" is not a regular file'.format(path), int(args.verbose or args.debug))
                 continue
 
             if not args.no_backup:
-                root = os.path.dirname (path)
-                backup_path = os.path.join (root, path + args.ext)
+                root = os.path.dirname(path)
+                backup_path = os.path.join(root, path + args.ext)
 
-                if os.path.exists (backup_path):
-                    errmsg ('Backup path: "{0}" for file "{1}" already exists, file omited'.format (backup_path, path), int (args.verbose or args.debug))
+                if os.path.exists(backup_path):
+                    errmsg('Backup path: "{0}" for file "{1}" already exists, file omited'.format(backup_path, path),
+                           int(args.verbose or args.debug))
                     continue
 
                 try:
@@ -332,11 +334,11 @@ def main ():
                     continue
 
                 if args.debug:
-                    debug ('created backup file: "{0}"'.format (backup_path), 1)
+                    debug('created backup file: "{0}"'.format(backup_path), 1)
 
             if not args.stdout:
-                tmp_fh, tmp_path = tempfile.mkstemp ()
-                tmp_fh = os.fdopen (tmp_fh, 'w')
+                tmp_fh, tmp_path = tempfile.mkstemp()
+                tmp_fh = os.fdopen(tmp_fh, 'w')
 
                 try:
                     shutil.copy2(path, tmp_path)
@@ -348,15 +350,15 @@ def main ():
                     continue
                 else:
                     if args.debug:
-                        debug ('created temporary copy: "{0}"'.format (tmp_path), 1)
+                        debug('created temporary copy: "{0}"'.format(tmp_path), 1)
             else:
                 tmp_fh = sys.stdout
 
             try:
-                with open (path, 'r') as fh_src:
-                    cnt = replace_func (fh_src, tmp_fh, args.pattern, args.replace, args.count)
+                with open(path, 'r') as fh_src:
+                    cnt = replace_func(fh_src, tmp_fh, args.pattern, args.replace, args.count)
                     if args.verbose or args.debug:
-                        debug ('{0} replacements'.format (cnt), 1)
+                        debug('{0} replacements'.format(cnt), 1)
 
                 if not args.stdout:
                     os.rename(tmp_path, path)
@@ -366,7 +368,7 @@ def main ():
                 continue
             else:
                 if args.debug:
-                    debug ('moved temporary file to original', 1)
+                    debug('moved temporary file to original', 1)
 
 if __name__ == '__main__':
-    main ()
+    main()
