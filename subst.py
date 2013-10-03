@@ -95,33 +95,33 @@ def prepare_pattern_data(args):  # pylint: disable-msg=too-many-branches
         return re.compile (pattern, flags), args.replace, args.count or 0
 
     elif args.pattern_and_replace is not None:
-        p = args.pattern_and_replace
+        pat = args.pattern_and_replace
 
         try:
             # pattern must begin with 's'
-            if not p.startswith ('s'):
-                raise ParserException ('Bad pattern specified: {0}'.format (args.pattern_and_replace))
-            p = p[1:]
+            if not pat.startswith('s'):
+                raise ParserException('Bad pattern specified: {0}'.format(args.pattern_and_replace))
+            pat = pat[1:]
 
             # parse pattern
-            if p.startswith ('('):
-                pattern, replace, _flags = p[1:].split (')(', 2)
-            elif p.startswith ('{'):
-                pattern, replace, _flags = p[1:].split ('}{', 2)
-            elif p.startswith ('['):
-                pattern, replace, _flags = p[1:].split ('][', 2)
-            elif p.startswith ('<'):
-                pattern, replace, _flags = p[1:].split ('><', 2)
+            if pat.startswith('('):
+                pattern, replace, _flags = pat[1:].split(')(', 2)
+            elif pat.startswith('{'):
+                pattern, replace, _flags = pat[1:].split('}{', 2)
+            elif pat.startswith('['):
+                pattern, replace, _flags = pat[1:].split('][', 2)
+            elif pat.startswith('<'):
+                pattern, replace, _flags = pat[1:].split('><', 2)
             else:
-                delim = p[0]
+                delim = pat[0]
 
-                p = p[1:]
-                pattern, replace, _flags = p.split (delim, 2)
+                pat = pat[1:]
+                pattern, replace, _flags = pat.split(delim, 2)
 
             # pattern can be suffixed with g (as global)
             if 'g' in _flags:
                 count = 0
-                p = p[:-1]
+                pat = pat[:-1]
             else:
                 count = args.count if args.count is not None else 1
 
