@@ -67,7 +67,9 @@ def debug(message, indent=0, end=None):
     print((' ' * indent * 4) + message, file=sys.stderr, end=end)
 
 def _parse_args__get_ext(args):
-    """ Find extension for backup files
+    """ Find extension for backup files.
+
+        Extension in args is supposed to not have leading dot.
     """
     if args.no_backup:
         return ''
