@@ -74,7 +74,7 @@ def _parse_args__get_ext(args):
     if args.no_backup:
         return ''
 
-    if args.ext is None or len(args.ext) == 0:
+    if not args.ext:
         return '.' + DEFAULT_BACKUP_EXTENSION
 
     return '.' + args.ext
