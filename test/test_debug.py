@@ -79,3 +79,6 @@ class TestErrMsg(unittest.TestCase):
         sys.stderr = old_stderr
 
         self.assertEqual(data, data_in + end)
+
+if __name__ == '__main__':
+    unittest.main()

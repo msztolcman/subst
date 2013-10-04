@@ -26,3 +26,6 @@ class TestShowVersion(unittest.TestCase):
         sys.stdout = old_stdout
 
         self.assertRegexpMatches(data, ': version %s' % re.escape(subst.__version__))
+
+if __name__ == '__main__':
+    unittest.main()
