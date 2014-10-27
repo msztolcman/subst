@@ -25,11 +25,13 @@ __version__ = '0.2'
 
 DEFAULT_BACKUP_EXTENSION = 'bak'
 
+
 class SubstException(Exception):
     """ Exception raised when there is some error.
     """
 
     pass
+
 
 class ParserException(SubstException):
     """ Exception raised when pattern given by user has errors.
@@ -37,12 +39,14 @@ class ParserException(SubstException):
 
     pass
 
+
 def show_version():
     """ Show version info and exit.
     """
 
     msg('{0}: version {1}'.format(os.path.basename(sys.argv[0]), __version__))
     sys.exit(0)
+
 
 def errmsg(message, indent=0, end=None):
     """ Display error message.
@@ -52,11 +56,13 @@ def errmsg(message, indent=0, end=None):
 
     print((' ' * indent * 4) + message, file=sys.stderr, end=end)
 
+
 def msg(message, indent=0, end=None):
     """ Display message.
     """
 
     print((' ' * indent * 4) + message, end=end)
+
 
 def debug(message, indent=0, end=None):
     """ Display debug message.
@@ -65,6 +71,7 @@ def debug(message, indent=0, end=None):
     """
 
     print((' ' * indent * 4) + message, file=sys.stderr, end=end)
+
 
 def _parse_args__get_ext(args):
     """ Find extension for backup files.
@@ -79,14 +86,16 @@ def _parse_args__get_ext(args):
 
     return '.' + args.ext
 
+
 def _parse_args__eval_replacement(repl):
     """ Compile replace argument as valid Python code and return
         function which can be passed to re.sub or re.subn functions.
     """
     def _(match):  # pylint: disable-msg=missing-docstring
-        return eval (repl, { '__builtins__': __builtins__ }, { 'm': match })
+        return eval(repl, {'__builtins__': __builtins__}, {'m': match})
 
     return _
+
 
 def _parse_args__pattern(args):  # pylint: disable-msg=too-many-branches
     """ Read arguments from argparse.ArgumentParser instance, and
@@ -174,6 +183,7 @@ def _parse_args__pattern(args):  # pylint: disable-msg=too-many-branches
     else:
         raise ParserException('Bad pattern specified: {0}'.format(args.pattern_and_replace))
 
+
 def wrap_text(txt):
     """ Make custom wrapper for passed text.
 
@@ -181,14 +191,15 @@ def wrap_text(txt):
         textwrap.TextWrapper settings, then return reformatted string.
     """
     _wrap = textwrap.TextWrapper(
-        width = 72,
-        expand_tabs = True,
-        replace_whitespace = False,
-        drop_whitespace = True,
-        subsequent_indent = '  ',
+        width=72,
+        expand_tabs=True,
+        replace_whitespace=False,
+        drop_whitespace=True,
+        subsequent_indent='  ',
     )
-    txt = [ _wrap.fill(line) for line in txt.splitlines() ]
+    txt = [_wrap.fill(line) for line in txt.splitlines()]
     return "\n".join(txt)
+
 
 def parse_args(args):
     """ Parse arguments passed to script, validate it, compile if needed and return.
@@ -212,11 +223,10 @@ def parse_args(args):
             "* parsing expression passed to --pattern_and_replace argument is very simple - if you use / as delimiter, "
                 "then in your expression can\'t be used this character anymore. If you need to use same character as "
                 "delimiter and in expression, then better use --pattern and --replace argument\n"
-#             "* "
             "\n"
             "Security notes:\n"
             "* be carefull with --eval-replace argument. When it's given, value passed to --replace is eval-ed, so any "
-                         "not safe code will be executed!\n"
+            "not safe code will be executed!\n"
             "\n"
             "Author:\n"
             "Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net\n"
@@ -255,7 +265,7 @@ def parse_args(args):
     p.add_argument('-b', '--no-backup', dest='no_backup', action='store_true',
                    help='disable creating backup of modified files.')
     p.add_argument('-e', '--backup-extension', dest='ext', default=DEFAULT_BACKUP_EXTENSION, type=str,
-                   help='extension for backuped files(ignore if no backup is created), without leading dot. Defaults to: "bak".')
+                   help='extension for backup files(ignore if no backup is created), without leading dot. Defaults to: "bak".')
     p.add_argument('--stdin', action='store_true',
                    help='read data from STDIN(implies --stdout)')
     p.add_argument('--stdout', action='store_true',
@@ -263,7 +273,7 @@ def parse_args(args):
     p.add_argument('--verbose', action='store_true',
                    help='show files and how many replacements was done')
     p.add_argument('--debug', action='store_true',
-                   help='show more infos')
+                   help='show more informations')
     p.add_argument('-v', '--version', action='store_true',
                    help='show version and exit')
     p.add_argument('files', nargs='*', type=str,
@@ -299,6 +309,7 @@ def parse_args(args):
 
     return args
 
+
 def replace_linear(src, dst, pattern, replace, count):
     """ Read data from 'src' line by line, replace some data from
         regular expression in 'pattern' with data in 'replace',
@@ -312,6 +323,7 @@ def replace_linear(src, dst, pattern, replace, count):
         dst.write(line)
     return ret
 
+
 def replace_global(src, dst, pattern, replace, count):
     """ Read whole file from 'src', replace some data from
         regular expression in 'pattern' with data in 'replace',
@@ -321,6 +333,7 @@ def replace_global(src, dst, pattern, replace, count):
     data, ret = pattern.subn(replace, data, count)
     dst.write(data)
     return ret
+
 
 def _process_file__make_backup(path, backup_ext):
     """ Create backup of file: copy it new extension.
@@ -332,7 +345,7 @@ def _process_file__make_backup(path, backup_ext):
     backup_path = os.path.join(root, path + backup_ext)
 
     if os.path.exists(backup_path):
-        raise SubstException('Backup path: "{0}" for file "{1}" already exists, file omited'.format(backup_path, path))
+        raise SubstException('Backup path: "{0}" for file "{1}" already exists, file omitted'.format(backup_path, path))
 
     try:
         shutil.copy2(path, backup_path)
@@ -340,6 +353,7 @@ def _process_file__make_backup(path, backup_ext):
         raise SubstException('Cannot create backup for "{0}": {1}'.format(path, ex))
 
     return backup_path
+
 
 def _process_file__handle(src_path, dst_fh, cfg, replace_func):
     """ Read data from `src_path`, replace data with `replace_func` and
@@ -350,6 +364,7 @@ def _process_file__handle(src_path, dst_fh, cfg, replace_func):
         cnt = replace_func(fh_src, dst_fh, cfg.pattern, cfg.replace, cfg.count)
         if cfg.verbose or cfg.debug:
             debug('{0} replacements'.format(cnt), 1)
+
 
 def _process_file__regular(src_path, cfg, replace_func):
     """ Read data from `src_path`, replace data with `replace_func` and
@@ -405,6 +420,7 @@ def process_file(path, replace_func, cfg):
     except SubstException as ex:
         errmsg(ex)
 
+
 def main():
     """ Run tool: parse input arguments, read data, replace and save or display.
     """
@@ -427,6 +443,7 @@ def main():
                 process_file(path, replace_func, args)
             except SubstException as ex:
                 errmsg(ex.message, int(args.verbose or args.debug))
+
 
 if __name__ == '__main__':
     main()
