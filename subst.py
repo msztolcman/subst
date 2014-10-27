@@ -19,7 +19,7 @@ import sys
 import tempfile
 import textwrap
 
-from pprint import pprint, pformat  # pylint: disable-msg=unused-import
+from pprint import pprint, pformat  # pylint: disable=unused-import
 
 __version__ = '0.2'
 
@@ -91,13 +91,13 @@ def _parse_args__eval_replacement(repl):
     """ Compile replace argument as valid Python code and return
         function which can be passed to re.sub or re.subn functions.
     """
-    def _(match):  # pylint: disable-msg=missing-docstring
+    def _(match):  # pylint: disable=missing-docstring
         return eval(repl, {'__builtins__': __builtins__}, {'m': match})
 
     return _
 
 
-def _parse_args__pattern(args):  # pylint: disable-msg=too-many-branches
+def _parse_args__pattern(args):  # pylint: disable=too-many-branches
     """ Read arguments from argparse.ArgumentParser instance, and
         parse it to find correct values for arguments:
             * pattern
@@ -205,7 +205,7 @@ def parse_args(args):
     """ Parse arguments passed to script, validate it, compile if needed and return.
     """
 
-    p = argparse.ArgumentParser(  # pylint: disable-msg=invalid-name
+    p = argparse.ArgumentParser(  # pylint: disable=invalid-name
         description='Replace PATTERN with REPLACE in many files.',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=wrap_text("Miscellaneous notes:\n"
@@ -303,7 +303,7 @@ def parse_args(args):
         args.ext = _parse_args__get_ext(args)
         args.pattern, args.replace, args.count = _parse_args__pattern(args)
         if args.eval:
-            args.replace = _parse_args__eval_replacement (args.replace)
+            args.replace = _parse_args__eval_replacement(args.replace)
     except ParserException as ex:
         p.error(ex)
 
@@ -389,7 +389,7 @@ def _process_file__regular(src_path, cfg, replace_func):
 
     try:
         tmp_fh.close()
-    except:  # pylint: disable-msg=bare-except
+    except:  # pylint: disable=bare-except
         pass
 
 
