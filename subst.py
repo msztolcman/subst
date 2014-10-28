@@ -278,13 +278,13 @@ def parse_args(args):
     p.add_argument('--pattern-multiline', dest='pattern_multiline', action='store_true',
                    help='with this flag pattern can be passed as multiline(see: http://docs.python.org/2/library/re.html#re.MULTILINE).')
     p.add_argument('--utf8', '-u', action='store_true',
-                   help='')
+                   help='Use UTF-8 in --encoding-input, --encoding-file and --encoding-filesystem')
     p.add_argument('--encoding-input', type=str, default=INPUT_ENCODING,
-                   help='')
+                   help='set encoding for parameters like --pattern etc (default for your system: %s)' % INPUT_ENCODING)
     p.add_argument('--encoding-file', type=str, default=FILE_ENCODING,
-                   help='')
+                   help='set encoding for content of processed files (default for your system: %s)' % FILE_ENCODING)
     p.add_argument('--encoding-filesystem', type=str, default=FILESYSTEM_ENCODING,
-                   help='')
+                   help='set encoding for paths and filenames (default for your system: %s)' % FILESYSTEM_ENCODING)
     p.add_argument('-b', '--no-backup', dest='no_backup', action='store_true',
                    help='disable creating backup of modified files.')
     p.add_argument('-e', '--backup-extension', dest='ext', default=DEFAULT_BACKUP_EXTENSION, type=str,
