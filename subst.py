@@ -447,6 +447,8 @@ def main():
 
     else:
         for path in args.files:
+            path = os.path.abspath(path)
+
             try:
                 process_file(path, replace_func, args)
             except SubstException as ex:
