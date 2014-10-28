@@ -223,14 +223,14 @@ def parse_args(args):
             "* if neither /g modifier nor --count argument is passed, assume that --count is equal 1\n"
             "* if only --count is given, this value is used\n"
             "* if --eval-replace is given, --replace must be valid Python code, where can be used m variable."
-                "m holds MatchObject instance (see: http://http://docs.python.org/2/library/re.html#match-objects, "
-                "for example:\n"
+            "m holds MatchObject instance (see: http://http://docs.python.org/2/library/re.html#match-objects, "
+            "for example:\n"
             "    --eval-replace --replace 'm.group(1).lower()'\n"
             "* regular expressions with non linear search read whole file to yours computer memory - if file size is "
-                "bigger then you have memory in your computer, it fails\n"
+            "bigger then you have memory in your computer, it fails\n"
             "* parsing expression passed to --pattern_and_replace argument is very simple - if you use / as delimiter, "
-                "then in your expression can\'t be used this character anymore. If you need to use same character as "
-                "delimiter and in expression, then better use --pattern and --replace argument\n"
+            "then in your expression can\'t be used this character anymore. If you need to use same character as "
+            "delimiter and in expression, then better use --pattern and --replace argument\n"
             "\n"
             "Security notes:\n"
             "* be carefull with --eval-replace argument. When it's given, value passed to --replace is eval-ed, so any "
@@ -241,7 +241,7 @@ def parse_args(args):
             "\n"
             "HomePage:\n"
             "http://mysz.github.io/subst/"
-        ),
+        )
     )
 
     p.add_argument('-p', '--pattern', type=str,
