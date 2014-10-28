@@ -261,7 +261,7 @@ def parse_args(args):
     p.add_argument('-t', '--string', type=bool,
                    help='if specified, treats --pattern as string, not as regular expression. Ignored with '
                    '--pattern_and_replace argument.')
-    p.add_argument('-s', '--pattern_and_replace', metavar='"s/PAT/REP/gixsm"', type=str,
+    p.add_argument('-s', '--pattern-and-replace', '--pattern_and_replace', metavar='"s/PAT/REP/gixsm"', type=str,
                    help='pattern and replacement in one: s/pattern/replace/g(pattern is always regular expression, /g '
                    'is optional and stands for --count=0, /i == --ignore-case, /s == --pattern-dot-all, /m == --pattern-multiline).')
     p.add_argument('-c', '--count', type=int,
