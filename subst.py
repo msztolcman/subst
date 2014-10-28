@@ -12,6 +12,7 @@
 from __future__ import print_function, unicode_literals
 
 import argparse
+import codecs
 import os, os.path
 import re
 import shutil
@@ -20,9 +21,13 @@ import tempfile
 import textwrap
 
 from pprint import pprint, pformat  # pylint: disable=unused-import
+import unicodedata
 
 __version__ = '0.2'
 
+FILESYSTEM_ENCODING = sys.getfilesystemencoding()
+FILE_ENCODING = sys.getdefaultencoding()
+INPUT_ENCODING = sys.getdefaultencoding()
 DEFAULT_BACKUP_EXTENSION = 'bak'
 
 
@@ -54,14 +59,14 @@ def errmsg(message, indent=0, end=None):
         Prints always to stderr.
     """
 
-    print((' ' * indent * 4) + message, file=sys.stderr, end=end)
+    print((' ' * indent * 4), message, file=sys.stderr, end=end, sep='')
 
 
 def msg(message, indent=0, end=None):
     """ Display message.
     """
 
-    print((' ' * indent * 4) + message, end=end)
+    print((' ' * indent * 4), message, end=end, sep='')
 
 
 def debug(message, indent=0, end=None):
@@ -70,7 +75,7 @@ def debug(message, indent=0, end=None):
         Prints always to stderr.
     """
 
-    print((' ' * indent * 4) + message, file=sys.stderr, end=end)
+    print((' ' * indent * 4), message, file=sys.stderr, end=end, sep='')
 
 
 def _parse_args__get_ext(args):
@@ -124,7 +129,7 @@ def _parse_args__pattern(args):  # pylint: disable=too-many-branches
         Returned pattern is compiled (see: re.compile).
     """
 
-    re_flags = 0
+    re_flags = re.UNICODE
 
     if args.pattern is not None and args.replace is not None:
         if args.string:
@@ -213,6 +218,8 @@ def parse_args(args):
     """ Parse arguments passed to script, validate it, compile if needed and return.
     """
 
+    global INPUT_ENCODING, FILE_ENCODING, FILESYSTEM_ENCODING
+
     p = argparse.ArgumentParser(  # pylint: disable=invalid-name
         description='Replace PATTERN with REPLACE in many files.',
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -270,6 +277,14 @@ def parse_args(args):
                    help='with this flag pattern can be passed as verbose(see: http://docs.python.org/2/library/re.html#re.VERBOSE).')
     p.add_argument('--pattern-multiline', dest='pattern_multiline', action='store_true',
                    help='with this flag pattern can be passed as multiline(see: http://docs.python.org/2/library/re.html#re.MULTILINE).')
+    p.add_argument('--utf8', '-u', action='store_true',
+                   help='')
+    p.add_argument('--encoding-input', type=str, default=INPUT_ENCODING,
+                   help='')
+    p.add_argument('--encoding-file', type=str, default=FILE_ENCODING,
+                   help='')
+    p.add_argument('--encoding-filesystem', type=str, default=FILESYSTEM_ENCODING,
+                   help='')
     p.add_argument('-b', '--no-backup', dest='no_backup', action='store_true',
                    help='disable creating backup of modified files.')
     p.add_argument('-e', '--backup-extension', dest='ext', default=DEFAULT_BACKUP_EXTENSION, type=str,
@@ -305,7 +320,28 @@ def parse_args(args):
             (args.pattern is None and args.replace is None and args.pattern_and_replace is None) or \
             (args.pattern is None and args.replace is not None) or \
             (args.pattern is not None and args.replace is None):
-        p.error('must be provided --pattern and --replace options, or --pattern_and_replace.')
+        p.error('must be provided --pattern and --replace options, or --pattern-and-replace.')
+
+    if args.utf8:
+        INPUT_ENCODING = FILE_ENCODING = FILESYSTEM_ENCODING = 'utf8'
+    else:
+        INPUT_ENCODING = args.encoding_input
+        FILE_ENCODING = args.encoding_file
+        FILESYSTEM_ENCODING = args.encoding_filesystem
+
+    try:
+        codecs.lookup(INPUT_ENCODING)
+        codecs.lookup(FILE_ENCODING)
+        codecs.lookup(FILESYSTEM_ENCODING)
+    except LookupError as exc:
+        p.error(exc)
+
+    if args.pattern:
+        args.pattern = args.pattern.decode(INPUT_ENCODING)
+    if args.replace:
+        args.replace = args.replace.decode(INPUT_ENCODING)
+    if args.pattern_and_replace:
+        args.pattern_and_replace = args.pattern_and_replace.decode(INPUT_ENCODING)
 
     try:
         args.ext = _parse_args__get_ext(args)
@@ -325,10 +361,11 @@ def replace_linear(src, dst, pattern, replace, count):
     """
     ret = 0
     for line in src:
+        line = line.decode(FILE_ENCODING)
         if count == 0 or ret < count:
             line, rest_count = pattern.subn(replace, line, max(0, count - ret))
             ret += rest_count
-        dst.write(line)
+        dst.write(line.encode(FILE_ENCODING))
     return ret
 
 
@@ -337,9 +374,9 @@ def replace_global(src, dst, pattern, replace, count):
         regular expression in 'pattern' with data in 'replace',
         write it to 'dst', and return quantity of replaces.
     """
-    data = src.read()
+    data = src.read().decode(FILE_ENCODING)
     data, ret = pattern.subn(replace, data, count)
-    dst.write(data)
+    dst.write(data.encode(FILE_ENCODING))
     return ret
 
 
@@ -447,6 +484,7 @@ def main():
 
     else:
         for path in args.files:
+            path = unicodedata.normalize('NFKC', path.decode(FILESYSTEM_ENCODING))
             path = os.path.abspath(path)
 
             try:
