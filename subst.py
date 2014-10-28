@@ -124,19 +124,19 @@ def _parse_args__pattern(args):  # pylint: disable=too-many-branches
         Returned pattern is compiled (see: re.compile).
     """
 
-    flags = 0
+    re_flags = 0
 
     if args.ignore_case:
-        flags |= re.IGNORECASE
+        re_flags |= re.IGNORECASE
 
     if args.pattern_dot_all:
-        flags |= re.DOTALL
+        re_flags |= re.DOTALL
 
     if args.pattern_verbose:
-        flags |= re.VERBOSE
+        re_flags |= re.VERBOSE
 
     if args.pattern_multiline:
-        flags |= re.MULTILINE
+        re_flags |= re.MULTILINE
 
     if args.pattern is not None and args.replace is not None:
         if args.string:
@@ -144,7 +144,7 @@ def _parse_args__pattern(args):  # pylint: disable=too-many-branches
         else:
             pattern = args.pattern
 
-        return re.compile(pattern, flags), args.replace, args.count or 0
+        return re.compile(pattern, re_flags), args.replace, args.count or 0
 
     elif args.pattern_and_replace is not None:
         pat = args.pattern_and_replace
@@ -165,31 +165,28 @@ def _parse_args__pattern(args):  # pylint: disable=too-many-branches
             elif pat.startswith('<'):
                 pattern, replace, flags = _parse_args__split_bracketed_pattern('<>', pat)
             else:
-                delim = pat[0]
+                delim, pat = pat[0], pat[1:]
+                pattern, replace, flags = pat.split(delim, 2)
 
-                pat = pat[1:]
-                pattern, replace, _flags = pat.split(delim, 2)
-
-            # pattern can be suffixed with g (as global)
-            if 'g' in _flags:
+            if 'g' in flags:
                 count = 0
                 pat = pat[:-1]
             else:
                 count = args.count if args.count is not None else 1
 
-            if 'i' in _flags:
-                flags |= re.IGNORECASE
-            if 'x' in _flags:
-                flags |= re.VERBOSE
-            if 's' in _flags:
-                flags |= re.DOTALL
-            if 'm' in _flags:
-                flags |= re.MULTILINE
+            if 'i' in flags:
+                re_flags |= re.IGNORECASE
+            if 'x' in flags:
+                re_flags |= re.VERBOSE
+            if 's' in flags:
+                re_flags |= re.DOTALL
+            if 'm' in flags:
+                re_flags |= re.MULTILINE
 
         except ValueError:
             raise ParserException('Bad pattern specified: {0}'.format(args.pattern_and_replace))
 
-        return re.compile(pattern, flags), replace, count
+        return re.compile(pattern, re_flags), replace, count
     else:
         raise ParserException('Bad pattern specified: {0}'.format(args.pattern_and_replace))
 
