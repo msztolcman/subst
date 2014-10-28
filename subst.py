@@ -258,7 +258,7 @@ def parse_args(args):
                    help='pattern and replacement in one: s/pattern/replace/g(pattern is always regular expression, /g '
                    'is optional and stands for --count=0, /i == --ignore-case, /s == --pattern-dot-all, /m == --pattern-multiline).')
     p.add_argument('-c', '--count', type=int,
-                   help='make COUNT replacements for every file(0 make unlimited changes, default).')
+                   help='make COUNT replacements for every file (0 makes unlimited changes, default).')
     p.add_argument('-l', '--linear', action='store_true',
                    help='apply pattern for every line separately. Without this flag whole file is read into memory.')
     p.add_argument('-i', '--ignore-case', dest='ignore_case', action='store_true',
@@ -344,7 +344,7 @@ def replace_global(src, dst, pattern, replace, count):
 
 
 def _process_file__make_backup(path, backup_ext):
-    """ Create backup of file: copy it new extension.
+    """ Create backup of file: copy it with new extension.
 
         Returns path to backup file.
     """
