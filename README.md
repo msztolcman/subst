@@ -222,5 +222,6 @@ ChangeLog
 * unified switches syntax (was --pattern_and_replace, but other switches used dashes)
 * pep8
 * typos and editorials
+
 ### v0.2
 * second public version
