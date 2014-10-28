@@ -118,7 +118,7 @@ def _parse_args__pattern(args):  # pylint: disable=too-many-branches
             * pattern
             * replace
             * count
-        If is provided --pattern_and_replace argument, then parse
+        If is provided --pattern-and-replace argument, then parse
         it and return data from it.
 
         In other case just return data from argparse.ArgumentParser
@@ -225,8 +225,8 @@ def parse_args(args):
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=wrap_text("Miscellaneous notes:\n"
             "* regular expressions engine used here is PCRE, dialect from Python\n"
-            "* is required to pass either --pattern and -replace, or --pattern_and_replace argument\n"
-            "* if pattern passed to --pattern_and_replace has /g modifier, it overwrites --count value\n"
+            "* is required to pass either --pattern and -replace, or --pattern-and-replace argument\n"
+            "* if pattern passed to --pattern-and-replace has /g modifier, it overwrites --count value\n"
             "* if neither /g modifier nor --count argument is passed, assume that --count is equal 1\n"
             "* if only --count is given, this value is used\n"
             "* if --eval-replace is given, --replace must be valid Python code, where can be used m variable."
@@ -235,7 +235,7 @@ def parse_args(args):
             "    --eval-replace --replace 'm.group(1).lower()'\n"
             "* regular expressions with non linear search read whole file to yours computer memory - if file size is "
             "bigger then you have memory in your computer, it fails\n"
-            "* parsing expression passed to --pattern_and_replace argument is very simple - if you use / as delimiter, "
+            "* parsing expression passed to --pattern-and-replace argument is very simple - if you use / as delimiter, "
             "then in your expression can\'t be used this character anymore. If you need to use same character as "
             "delimiter and in expression, then better use --pattern and --replace argument\n"
             "\n"
@@ -252,16 +252,16 @@ def parse_args(args):
     )
 
     p.add_argument('-p', '--pattern', type=str,
-                   help='pattern to replace for. Supersede --pattern_and_replace. Required if --replace is specified.')
+                   help='pattern to replace for. Supersede --pattern-and-replace. Required if --replace is specified.')
     p.add_argument('-r', '--replace', type=str,
-                   help='replacement. Supersede --pattern_and_replace. Required if --pattern is specified.')
+                   help='replacement. Supersede --pattern-and-replace. Required if --pattern is specified.')
     p.add_argument('--eval-replace', dest='eval', action='store_true',
                    help='if specified, make eval data from --replace(should be valid Python code). Ignored with '
-                   '--pattern_and_replace argument.')
+                   '--pattern-and-replace argument.')
     p.add_argument('-t', '--string', type=bool,
                    help='if specified, treats --pattern as string, not as regular expression. Ignored with '
-                   '--pattern_and_replace argument.')
-    p.add_argument('-s', '--pattern-and-replace', '--pattern_and_replace', metavar='"s/PAT/REP/gixsm"', type=str,
+                   '--pattern-and-replace argument.')
+    p.add_argument('-s', '--pattern-and-replace', '--pattern-and-replace', metavar='"s/PAT/REP/gixsm"', type=str,
                    help='pattern and replacement in one: s/pattern/replace/g(pattern is always regular expression, /g '
                    'is optional and stands for --count=0, /i == --ignore-case, /s == --pattern-dot-all, /m == --pattern-multiline).')
     p.add_argument('-c', '--count', type=int,

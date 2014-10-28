@@ -60,20 +60,19 @@ Look at result:
     optional arguments:
       -h, --help            show this help message and exit
       -p PATTERN, --pattern PATTERN
-                            pattern to replace for. Supersede
-                            --pattern_and_replace. Required if --replace is
-                            specified.
+                            pattern to replace for. Supersede --pattern-and-
+                            replace. Required if --replace is specified.
       -r REPLACE, --replace REPLACE
-                            replacement. Supersede --pattern_and_replace. Required
+                            replacement. Supersede --pattern-and-replace. Required
                             if --pattern is specified.
       --eval-replace        if specified, make eval data from --replace(should be
-                            valid Python code). Ignored with --pattern_and_replace
+                            valid Python code). Ignored with --pattern-and-replace
                             argument.
       -t STRING, --string STRING
                             if specified, treats --pattern as string, not as
-                            regular expression. Ignored with --pattern_and_replace
+                            regular expression. Ignored with --pattern-and-replace
                             argument.
-      -s "s/PAT/REP/gixsm", --pattern-and-replace "s/PAT/REP/gixsm", --pattern_and_replace "s/PAT/REP/gixsm"
+      -s "s/PAT/REP/gixsm", --pattern-and-replace "s/PAT/REP/gixsm", --pattern-and-replace "s/PAT/REP/gixsm"
                             pattern and replacement in one:
                             s/pattern/replace/g(pattern is always regular
                             expression, /g is optional and stands for --count=0,
@@ -117,9 +116,9 @@ Look at result:
     
     Miscellaneous notes:
     * regular expressions engine used here is PCRE, dialect from Python
-    * is required to pass either --pattern and -replace, or
-      --pattern_and_replace argument
-    * if pattern passed to --pattern_and_replace has /g modifier, it
+    * is required to pass either --pattern and -replace, or --pattern-and-
+      replace argument
+    * if pattern passed to --pattern-and-replace has /g modifier, it
       overwrites --count value
     * if neither /g modifier nor --count argument is passed, assume that
       --count is equal 1
@@ -132,7 +131,7 @@ Look at result:
     * regular expressions with non linear search read whole file to yours
       computer memory - if file size is bigger then you have memory in your
       computer, it fails
-    * parsing expression passed to --pattern_and_replace argument is very
+    * parsing expression passed to --pattern-and-replace argument is very
       simple - if you use / as delimiter, then in your expression can't be
       used this character anymore. If you need to use same character as
       delimiter and in expression, then better use --pattern and --replace
