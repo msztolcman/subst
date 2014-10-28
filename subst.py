@@ -170,9 +170,10 @@ def _parse_args__pattern(args):  # pylint: disable=too-many-branches
 
             if 'g' in flags:
                 count = 0
-                pat = pat[:-1]
+            elif args.count is not None:
+                count = args.count
             else:
-                count = args.count if args.count is not None else 1
+                count = 1
 
             if 'i' in flags:
                 re_flags |= re.IGNORECASE
