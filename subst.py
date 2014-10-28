@@ -23,7 +23,7 @@ import textwrap
 from pprint import pprint, pformat  # pylint: disable=unused-import
 import unicodedata
 
-__version__ = '0.2'
+__version__ = '0.3'
 
 FILESYSTEM_ENCODING = sys.getfilesystemencoding()
 FILE_ENCODING = sys.getdefaultencoding()
