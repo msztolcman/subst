@@ -97,6 +97,16 @@ def _parse_args__eval_replacement(repl):
     return _
 
 
+def _parse_args__split_bracketed_pattern(delim, pattern):
+    pattern, replace = pattern[1:].split(delim[::-1], 1)
+    if replace.endswith(delim[1]):
+        flags = ''
+    else:
+        replace, flags = replace.rsplit(delim[1], 1)
+
+    return pattern, replace, flags
+
+
 def _parse_args__pattern(args):  # pylint: disable=too-many-branches
     """ Read arguments from argparse.ArgumentParser instance, and
         parse it to find correct values for arguments:
@@ -147,13 +157,13 @@ def _parse_args__pattern(args):  # pylint: disable=too-many-branches
 
             # parse pattern
             if pat.startswith('('):
-                pattern, replace, _flags = pat[1:].split(')(', 2)
+                pattern, replace, flags = _parse_args__split_bracketed_pattern('()', pat)
             elif pat.startswith('{'):
-                pattern, replace, _flags = pat[1:].split('}{', 2)
+                pattern, replace, flags = _parse_args__split_bracketed_pattern('{}', pat)
             elif pat.startswith('['):
-                pattern, replace, _flags = pat[1:].split('][', 2)
+                pattern, replace, flags = _parse_args__split_bracketed_pattern('[]', pat)
             elif pat.startswith('<'):
-                pattern, replace, _flags = pat[1:].split('><', 2)
+                pattern, replace, flags = _parse_args__split_bracketed_pattern('<>', pat)
             else:
                 delim = pat[0]
 
