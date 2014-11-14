@@ -6,7 +6,7 @@ subst
 Current stable version
 ----------------------
 
-0.3
+0.3.1
 
 But why?
 --------
@@ -215,7 +215,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ChangeLog
 ---------
 
+### v0.3.1
+
+* prepared and uploaded to PYPI 
+* typos and editorials
+
 ### v0.3
+
 * better handling of non-ascii encoding in files, patterns etc
 * higher priority for --pattern-* switches then modifiers in --pattern-and-replace
 * unified switches syntax (was --pattern_and_replace, but other switches used dashes)
@@ -223,4 +229,5 @@ ChangeLog
 * typos and editorials
 
 ### v0.2
+
 * second public version
