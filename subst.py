@@ -25,6 +25,7 @@ import unicodedata
 
 __version__ = '0.3.1'
 
+IS_PY2 = sys.version_info[0] < 3
 FILESYSTEM_ENCODING = sys.getfilesystemencoding()
 FILE_ENCODING = sys.getdefaultencoding()
 INPUT_ENCODING = sys.getdefaultencoding()
@@ -35,7 +36,8 @@ class SubstException(Exception):
     """ Exception raised when there is some error.
     """
 
-    pass
+    def __init__(self, message):
+        self.message = message
 
 
 class ParserException(SubstException):
@@ -307,8 +309,18 @@ def parse_args(args):
     if args.version:
         return args
 
-    if not args.files or args.files[0] == '-':
+    if not args.files:
         args.stdin = True
+    else:
+        file0 = args.files[0]
+        if IS_PY2:
+            file0 = file0.decode(FILESYSTEM_ENCODING)
+
+        file0 = unicodedata.normalize('NFKC', file0)
+        if file0 == '-':
+            args.stdin = True
+
+        del file0
 
     if args.stdin:
         args.stdout = True
@@ -336,11 +348,11 @@ def parse_args(args):
     except LookupError as exc:
         p.error(exc)
 
-    if args.pattern:
+    if args.pattern and IS_PY2:
         args.pattern = args.pattern.decode(INPUT_ENCODING)
-    if args.replace:
+    if args.replace and IS_PY2:
         args.replace = args.replace.decode(INPUT_ENCODING)
-    if args.pattern_and_replace:
+    if args.pattern_and_replace and IS_PY2:
         args.pattern_and_replace = args.pattern_and_replace.decode(INPUT_ENCODING)
 
     try:
@@ -361,11 +373,17 @@ def replace_linear(src, dst, pattern, replace, count):
     """
     ret = 0
     for line in src:
-        line = line.decode(FILE_ENCODING)
+        if IS_PY2:
+            line = line.decode(FILE_ENCODING)
+
         if count == 0 or ret < count:
             line, rest_count = pattern.subn(replace, line, max(0, count - ret))
             ret += rest_count
-        dst.write(line.encode(FILE_ENCODING))
+
+        if IS_PY2:
+            line = line.encode(FILE_ENCODING)
+
+        dst.write(line)
     return ret
 
 
@@ -374,9 +392,16 @@ def replace_global(src, dst, pattern, replace, count):
         regular expression in 'pattern' with data in 'replace',
         write it to 'dst', and return quantity of replaces.
     """
-    data = src.read().decode(FILE_ENCODING)
+    data = src.read()
+    if IS_PY2:
+        data = data.decode(FILE_ENCODING)
+
     data, ret = pattern.subn(replace, data, count)
-    dst.write(data.encode(FILE_ENCODING))
+
+    if IS_PY2:
+        data = data.encode(FILE_ENCODING)
+
+    dst.write(data)
     return ret
 
 
@@ -484,7 +509,9 @@ def main():
 
     else:
         for path in args.files:
-            path = unicodedata.normalize('NFKC', path.decode(FILESYSTEM_ENCODING))
+            if IS_PY2:
+                path = path.decode(FILESYSTEM_ENCODING)
+            path = unicodedata.normalize('NFKC', path)
             path = os.path.abspath(path)
 
             try:
