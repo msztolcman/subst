@@ -25,7 +25,7 @@ class TestParseArgsEvalReplacement(unittest.TestCase):
         result = subst._parse_args__eval_replacement(code)
 
         self.assertEqual(type(result), types.FunctionType)
-        if PY2:
+        if IS_PY2:
             self.assertRaisesRegexp(TypeError, r'takes exactly 1 argument', result)
         else:
             self.assertRaisesRegexp(TypeError, r'missing 1 required positional argument', result)
@@ -37,7 +37,7 @@ class TestParseArgsEvalReplacement(unittest.TestCase):
         result = subst._parse_args__eval_replacement(code)
 
         self.assertEqual(type(result), types.FunctionType)
-        if PY2:
+        if IS_PY2:
             self.assertRaisesRegexp(TypeError, r'takes exactly 1 argument', result)
         else:
             self.assertRaisesRegexp(TypeError, r'missing 1 required positional argument', result)
