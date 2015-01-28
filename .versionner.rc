@@ -1,0 +1,27 @@
+[versionner]
+file = VERSION
+
+[file:subst.py]
+enabled = true
+match = line
+search = ^\s*__version__\s*=.*$
+replace = __version__ = '%(version)s'
+
+[file:setup.py]
+enabled = true
+match = line
+search = \bversion\s*=.*$
+replace = version='%(version)s',
+encoding = utf-8
+
+[file:README.md]
+enabled = true
+match = file
+search = \nCurrent stable version
+    ----------------------
+    \s+[\w.-]+\n
+replace = \nCurrent stable version
+    ----------------------
+
+    %(version)s\n
+encoding = utf-8
