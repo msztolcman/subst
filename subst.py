@@ -36,15 +36,10 @@ class SubstException(Exception):
     """ Exception raised when there is some error.
     """
 
-    def __init__(self, message):
-        self.message = message
-
 
 class ParserException(SubstException):
     """ Exception raised when pattern given by user has errors.
     """
-
-    pass
 
 
 def show_version():
