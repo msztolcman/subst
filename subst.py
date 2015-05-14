@@ -23,7 +23,7 @@ import unicodedata
 
 from pprint import pprint, pformat  # pylint: disable=unused-import
 
-__version__ = '0.3.2'
+__version__ = '0.4.0'
 
 IS_PY2 = sys.version_info[0] < 3
 FILESYSTEM_ENCODING = sys.getfilesystemencoding()

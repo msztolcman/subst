@@ -9,7 +9,7 @@ with open(path.join(BASE_DIR, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='subst',
-    version='0.3.2',
+    version='0.4.0',
     description='`subst` is simple utility to replace one string into another in given list of files.',
     long_description=long_description,
     url='http://mysz.github.io/subst/',
