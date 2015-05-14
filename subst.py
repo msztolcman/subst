@@ -94,12 +94,21 @@ def _parse_args__eval_replacement(repl):
         function which can be passed to re.sub or re.subn functions.
     """
     def _(match):  # pylint: disable=missing-docstring
+        # pylint: disable=eval-used
         return eval(repl, {'__builtins__': __builtins__}, {'m': match})
 
     return _
 
 
+# pylint: disable=invalid-name
 def _parse_args__split_bracketed_pattern(delim, pattern):
+    """
+    Helper for parsing arguments: search user-given pattern for delim
+    and extract flags, replacement and specific pattern from it
+    :param delim:
+    :param pattern:
+    :return:
+    """
     pattern, replace = pattern[1:].split(delim[::-1], 1)
     if replace.endswith(delim[1]):
         flags = ''
@@ -211,10 +220,12 @@ def wrap_text(txt):
     return "\n".join(txt)
 
 
+# pylint: disable=too-many-branches,too-many-statements
 def parse_args(args):
     """ Parse arguments passed to script, validate it, compile if needed and return.
     """
 
+    # pylint: disable=global-statement
     global INPUT_ENCODING, FILE_ENCODING, FILESYSTEM_ENCODING
 
     p = argparse.ArgumentParser(  # pylint: disable=invalid-name
