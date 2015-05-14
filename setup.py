@@ -4,7 +4,7 @@ from os import path
 
 BASE_DIR = path.abspath(path.dirname(__file__))
 
-with open(path.join(BASE_DIR, 'README.md'), encoding='utf-8') as f:
+with open(path.join(BASE_DIR, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
