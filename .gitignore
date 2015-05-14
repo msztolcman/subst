@@ -42,3 +42,8 @@ nosetests.xml
 /venv26/
 /venv27/
 /venv34/
+/venv-26/
+/venv-27/
+/venv-34/
+/venv-2/
+/venv-3/
