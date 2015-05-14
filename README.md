@@ -215,6 +215,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ChangeLog
 ---------
 
+### v0.4.0
+
+* PEP8 improvements (coding style)
+* Makefile added
+* improved pylintrc
+
 ### v0.3.1
 
 * prepared and uploaded to PYPI 
