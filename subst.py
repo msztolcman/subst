@@ -19,9 +19,9 @@ import shutil
 import sys
 import tempfile
 import textwrap
+import unicodedata
 
 from pprint import pprint, pformat  # pylint: disable=unused-import
-import unicodedata
 
 __version__ = '0.3.2'
 
