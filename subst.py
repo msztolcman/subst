@@ -48,24 +48,73 @@ def show_version():
     """ Show version info and exit.
     """
 
-    msg('{0}: version {1}'.format(os.path.basename(sys.argv[0]), __version__))
+    disp('{0}: version {1}'.format(os.path.basename(sys.argv[0]), __version__))
     sys.exit(0)
 
 
-def errmsg(message, indent=0, end=None):
-    """ Display error message.
+def u(string):
+    """ Wrapper to decode string into unicode.
+        Converts only when `string` is type of `str`, and in python2.
+        Thanks to this there is possible single codebase between PY2 and PY3.
+    """
+    if IS_PY2:
+        if isinstance(string, str):
+            return string.decode('utf-8')
+    else:
+        if isinstance(string, bytes):
+            return str(string)
 
-        Prints always to stderr.
+    return string
+
+
+def err(*args, **kwargs):
+    """
+    Display error message.
+
+    It's a wrapper for utils.disp, with additions:
+        * file - if not specified, use sys.stderr
+        * exit_code - if specified, calls sys.exit with given code. If None, do not exit.
+
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    args = list(args)
+    args.insert(0, 'ERROR:')
+
+    if not kwargs.get('file'):
+        kwargs['file'] = sys.stderr
+
+    disp(*args, **kwargs)
+
+    if kwargs.get('exit_code', None) is not None:
+        sys.exit(kwargs['exit_code'])
+
+
+def disp(*args, **kwargs):
+    """ Print data in safe way.
+
+        First, try to encode whole data to utf-8. If printing fails, try to encode to
+        sys.stdout.encoding or sys.getdefaultencoding(). In last step, encode to 'ascii'
+        with replacing unconvertable characters.
     """
 
-    print((' ' * indent * 4), message, file=sys.stderr, end=end, sep='')
+    indent = (' ' * kwargs.get('indent', 0) * 4)
+    if indent:
+        args = list(args)
+        args.insert(0, indent[:-1])
 
-
-def msg(message, indent=0, end=None):
-    """ Display message.
-    """
-
-    print((' ' * indent * 4), message, end=end, sep='')
+    try:
+        if IS_PY2:
+            args = [part.encode('utf-8') for part in args]
+        print(*args, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
+    except UnicodeEncodeError:
+        try:
+            args = [part.encode(sys.stdout.encoding or sys.getdefaultencoding()) for part in args]
+            print(*args, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
+        except UnicodeEncodeError:
+            args = [part.encode('ascii', 'replace') for part in args]
+            print(*args, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
 
 
 def debug(message, indent=0, end=None):
@@ -500,7 +549,7 @@ def process_file(path, replace_func, cfg):
         else:
             _process_file__regular(path, cfg, replace_func)
     except SubstException as ex:
-        errmsg(ex)
+        err(ex)
 
 
 def main():
@@ -529,7 +578,7 @@ def main():
             try:
                 process_file(path, replace_func, args)
             except SubstException as ex:
-                errmsg(str(ex), int(args.verbose or args.debug))
+                err(str(ex), indent=int(args.verbose or args.debug))
 
 
 if __name__ == '__main__':
