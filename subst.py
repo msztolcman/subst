@@ -46,12 +46,14 @@ def u(string, encoding='utf-8'):
         Converts only when `string` is type of `str`, and in python2.
         Thanks to this there is possible single codebase between PY2 and PY3.
     """
-    if IS_PY2:
-        if isinstance(string, str):
-            return string.decode(encoding)
-    else:
+    if not IS_PY2:
         if isinstance(string, bytes):
             return str(string, encoding=encoding)
+    else:
+        if isinstance(string, str):
+            return string.decode(encoding)
+        elif not isinstance(string, unicode):
+            return unicode(string)
 
     return string
 
