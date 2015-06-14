@@ -361,7 +361,7 @@ def parse_args(args):
     p.add_argument('files', nargs='*', type=str,
                    help='file to parse.')
 
-    args = p.parse_args()
+    args = p.parse_args(args)
 
     if args.version:
         return args
