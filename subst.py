@@ -117,13 +117,14 @@ def disp(*args, **kwargs):
             print(*args, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
 
 
-def debug(message, indent=0, end=None):
+def debug(message, **kwargs):
     """ Display debug message.
 
         Prints always to stderr.
     """
 
-    print((' ' * indent * 4), message, file=sys.stderr, end=end, sep='')
+    kwargs['file'] = sys.stderr
+    disp(message, **kwargs)
 
 
 def _parse_args__get_ext(args):
