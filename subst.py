@@ -354,6 +354,20 @@ def parse_args(args):
     if args.version:
         return args
 
+    if args.utf8:
+        INPUT_ENCODING = FILE_ENCODING = FILESYSTEM_ENCODING = 'utf8'
+    else:
+        INPUT_ENCODING = args.encoding_input
+        FILE_ENCODING = args.encoding_file
+        FILESYSTEM_ENCODING = args.encoding_filesystem
+
+    try:
+        codecs.lookup(INPUT_ENCODING)
+        codecs.lookup(FILE_ENCODING)
+        codecs.lookup(FILESYSTEM_ENCODING)
+    except LookupError as exc:
+        p.error(exc)
+
     if not args.files:
         args.stdin = True
     else:
@@ -379,19 +393,6 @@ def parse_args(args):
             (args.pattern is not None and args.replace is None):
         p.error('must be provided --pattern and --replace options, or --pattern-and-replace.')
 
-    if args.utf8:
-        INPUT_ENCODING = FILE_ENCODING = FILESYSTEM_ENCODING = 'utf8'
-    else:
-        INPUT_ENCODING = args.encoding_input
-        FILE_ENCODING = args.encoding_file
-        FILESYSTEM_ENCODING = args.encoding_filesystem
-
-    try:
-        codecs.lookup(INPUT_ENCODING)
-        codecs.lookup(FILE_ENCODING)
-        codecs.lookup(FILESYSTEM_ENCODING)
-    except LookupError as exc:
-        p.error(exc)
 
     if args.pattern and IS_PY2:
         args.pattern = args.pattern.decode(INPUT_ENCODING)
