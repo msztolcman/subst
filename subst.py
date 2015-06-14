@@ -528,7 +528,7 @@ def main():
             try:
                 process_file(path, replace_func, args)
             except SubstException as ex:
-                errmsg(ex.message, int(args.verbose or args.debug))
+                errmsg(str(ex), int(args.verbose or args.debug))
 
 
 if __name__ == '__main__':
