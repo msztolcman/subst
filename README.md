@@ -215,6 +215,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ChangeLog
 ---------
 
+### v0.5.0
+
+* many improvements to handling different encodings
+* improvements to pylintrc, Makefile
+* config for tox
+* many refactorings
+
 ### v0.4.0
 
 * PEP8 improvements (coding style)
