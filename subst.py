@@ -41,17 +41,17 @@ class ParserException(SubstException):
     """
 
 
-def u(string):
+def u(string, encoding='utf-8'):
     """ Wrapper to decode string into unicode.
         Converts only when `string` is type of `str`, and in python2.
         Thanks to this there is possible single codebase between PY2 and PY3.
     """
     if IS_PY2:
         if isinstance(string, str):
-            return string.decode('utf-8')
+            return string.decode(encoding)
     else:
         if isinstance(string, bytes):
-            return str(string)
+            return str(string, encoding=encoding)
 
     return string
 
@@ -368,15 +368,9 @@ def parse_args(args):
     if not args.files:
         args.stdin = True
     else:
-        file0 = args.files[0]
-        if IS_PY2:
-            file0 = file0.decode(FILESYSTEM_ENCODING)
-
-        file0 = unicodedata.normalize('NFKC', file0)
-        if file0 == '-':
+        args.files = [u(path, FILESYSTEM_ENCODING) for path in args.files]
+        if args.files[0] == '-':
             args.stdin = True
-
-        del file0
 
     if args.stdin:
         args.stdout = True
@@ -390,13 +384,12 @@ def parse_args(args):
             (args.pattern is not None and args.replace is None):
         p.error('must be provided --pattern and --replace options, or --pattern-and-replace.')
 
-
-    if args.pattern and IS_PY2:
-        args.pattern = args.pattern.decode(INPUT_ENCODING)
-    if args.replace and IS_PY2:
-        args.replace = args.replace.decode(INPUT_ENCODING)
-    if args.pattern_and_replace and IS_PY2:
-        args.pattern_and_replace = args.pattern_and_replace.decode(INPUT_ENCODING)
+    if args.pattern:
+        args.pattern = u(args.pattern, INPUT_ENCODING)
+    if args.replace:
+        args.replace = u(args.replace, INPUT_ENCODING)
+    if args.pattern_and_replace:
+        args.pattern_and_replace = u(args.pattern_and_replace, INPUT_ENCODING)
 
     try:
         args.ext = _parse_args__get_ext(args)
@@ -416,8 +409,7 @@ def replace_linear(src, dst, pattern, replace, count):
     """
     ret = 0
     for line in src:
-        if IS_PY2:
-            line = line.decode(FILE_ENCODING)
+        line = u(line, FILE_ENCODING)
 
         if count == 0 or ret < count:
             line, rest_count = pattern.subn(replace, line, max(0, count - ret))
@@ -436,8 +428,7 @@ def replace_global(src, dst, pattern, replace, count):
         write it to 'dst', and return quantity of replaces.
     """
     data = src.read()
-    if IS_PY2:
-        data = data.decode(FILE_ENCODING)
+    data = u(data, FILE_ENCODING)
 
     data, ret = pattern.subn(replace, data, count)
 
@@ -538,6 +529,7 @@ def process_file(path, replace_func, cfg):
 def main():
     """ Run tool: parse input arguments, read data, replace and save or display.
     """
+
     args = parse_args(sys.argv[1:])
 
     if args.linear:
@@ -550,15 +542,19 @@ def main():
 
     else:
         for path in args.files:
-            if IS_PY2:
-                path = path.decode(FILESYSTEM_ENCODING)
+            path = u(path, FILESYSTEM_ENCODING)
             path = unicodedata.normalize('NFKC', path)
+            path = os.path.expanduser(path)
             path = os.path.abspath(path)
 
             try:
                 process_file(path, replace_func, args)
             except SubstException as ex:
-                err(str(ex), indent=int(args.verbose or args.debug))
+                if not IS_PY2:
+                    ex = str(ex)
+                else:
+                    ex = unicode(ex)
+                err(u(ex), indent=int(args.verbose or args.debug))
 
 
 if __name__ == '__main__':
