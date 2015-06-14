@@ -150,7 +150,6 @@ def _parse_args__eval_replacement(repl):
     return _
 
 
-# pylint: disable=invalid-name
 def _parse_args__split_bracketed_pattern(delim, pattern):
     """
     Helper for parsing arguments: search user-given pattern for delim
