@@ -101,7 +101,8 @@ def disp(*args, **kwargs):
         print(*args, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
     except UnicodeEncodeError:
         try:
-            args = [part.encode(sys.stdout.encoding or sys.getdefaultencoding()) for part in args]
+            encoding = sys.stdout.encoding or sys.getdefaultencoding()
+            args = [part.encode(encoding) for part in args]
             print(*args, sep=kwargs.get('sep'), end=kwargs.get('end'), file=kwargs.get('file'))
         except UnicodeEncodeError:
             args = [part.encode('ascii', 'replace') for part in args]
