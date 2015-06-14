@@ -494,7 +494,7 @@ def _process_file__handle(src_path, dst_fh, cfg, replace_func):
     with open(src_path, 'r') as fh_src:
         cnt = replace_func(fh_src, dst_fh, cfg.pattern, cfg.replace, cfg.count)
         if cfg.verbose or cfg.debug:
-            debug('%s replacements' % cnt, 1)
+            debug('%s replacements' % cnt, indent=1)
 
 
 def _process_file__regular(src_path, cfg, replace_func):
@@ -516,7 +516,7 @@ def _process_file__regular(src_path, cfg, replace_func):
         raise SubstException('Error replacing "%s" with "%s": %s' % (src_path, tmp_path, ex))
     else:
         if cfg.debug:
-            debug('moved temporary file to original', 1)
+            debug('moved temporary file to original', indent=1)
 
     try:
         tmp_fh.close()
@@ -542,7 +542,7 @@ def process_file(path, replace_func, cfg):
         backup_path = _process_file__make_backup(path, cfg.ext)
 
         if cfg.debug:
-            debug('created backup file: "%s"' % backup_path, 1)
+            debug('created backup file: "%s"' % backup_path, indent=1)
 
     try:
         if cfg.stdout:
