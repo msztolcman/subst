@@ -41,14 +41,6 @@ class ParserException(SubstException):
     """
 
 
-def show_version():
-    """ Show version info and exit.
-    """
-
-    disp('%s: version %s' % (os.path.basename(sys.argv[0]), __version__))
-    sys.exit(0)
-
-
 def u(string):
     """ Wrapper to decode string into unicode.
         Converts only when `string` is type of `str`, and in python2.
@@ -278,9 +270,10 @@ def parse_args(args):
     # pylint: disable=global-statement
     global INPUT_ENCODING, FILE_ENCODING, FILESYSTEM_ENCODING
 
+    args_description = 'Replace PATTERN with REPLACE in many files.'
     # pylint: disable=invalid-name
     p = argparse.ArgumentParser(
-        description='Replace PATTERN with REPLACE in many files.',
+        description=args_description,
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=wrap_text("Miscellaneous notes:\n"
             "* regular expressions engine used here is PCRE, dialect from Python\n"
@@ -356,8 +349,8 @@ def parse_args(args):
                    help='show files and how many replacements was done')
     p.add_argument('--debug', action='store_true',
                    help='show more informations')
-    p.add_argument('-v', '--version', action='store_true',
-                   help='show version and exit')
+    p.add_argument('-v', '--version', action='version',
+        version="%s %s\n%s" % (os.path.basename(sys.argv[0]), __version__, args_description))
     p.add_argument('files', nargs='*', type=str,
                    help='file to parse.')
 
@@ -553,9 +546,6 @@ def main():
     """ Run tool: parse input arguments, read data, replace and save or display.
     """
     args = parse_args(sys.argv[1:])
-
-    if args.version:
-        show_version()
 
     if args.linear:
         replace_func = replace_linear
