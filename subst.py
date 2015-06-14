@@ -22,9 +22,6 @@ import tempfile
 import textwrap
 import unicodedata
 
-# pylint: disable=unused-import
-from pprint import pprint, pformat
-
 __version__ = '0.4.0'
 
 IS_PY2 = sys.version_info[0] < 3
