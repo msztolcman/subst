@@ -275,32 +275,27 @@ def parse_args(args):
     p = argparse.ArgumentParser(
         description=args_description,
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog=wrap_text("Miscellaneous notes:\n"
-            "* regular expressions engine used here is PCRE, dialect from Python\n"
-            "* is required to pass either --pattern and -replace, or --pattern-and-replace argument\n"
-            "* if pattern passed to --pattern-and-replace has /g modifier, it overwrites --count value\n"
-            "* if neither /g modifier nor --count argument is passed, assume that --count is equal 1\n"
-            "* if only --count is given, this value is used\n"
-            "* if --eval-replace is given, --replace must be valid Python code, where can be used m variable."
-            "m holds MatchObject instance (see: http://http://docs.python.org/2/library/re.html#match-objects, "
-            "for example:\n"
-            "    --eval-replace --replace 'm.group(1).lower()'\n"
-            "* regular expressions with non linear search read whole file to yours computer memory - if file size is "
-            "bigger then you have memory in your computer, it fails\n"
-            "* parsing expression passed to --pattern-and-replace argument is very simple - if you use / as delimiter, "
-            "then in your expression can\'t be used this character anymore. If you need to use same character as "
-            "delimiter and in expression, then better use --pattern and --replace argument\n"
-            "\n"
-            "Security notes:\n"
-            "* be carefull with --eval-replace argument. When it's given, value passed to --replace is eval-ed, so any "
-            "not safe code will be executed!\n"
-            "\n"
-            "Author:\n"
-            "Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net\n"
-            "\n"
-            "HomePage:\n"
-            "http://mysz.github.io/subst/"
-        )
+        epilog=wrap_text(textwrap.dedent("""\
+            Miscellaneous notes:
+            * regular expressions engine used here is PCRE, dialect from Python
+            * is required to pass either --pattern and -replace, or --pattern-and-replace argument
+            * if pattern passed to --pattern-and-replace has /g modifier, it overwrites --count value
+            * if neither /g modifier nor --count argument is passed, assume that --count is equal 1
+            * if only --count is given, this value is used
+            * if --eval-replace is given, --replace must be valid Python code, where can be used m variable. m holds MatchObject instance (see: http://http://docs.python.org/2/library/re.html#match-objects, for example:
+                --eval-replace --replace 'm.group(1).lower()'
+            * regular expressions with non linear search read whole file to yours computer memory - if file size is bigger then you have memory in your computer, it fails
+            * parsing expression passed to --pattern-and-replace argument is very simple - if you use / as delimiter, then in your expression can't be used this character anymore. If you need to use same character as delimiter and in expression, then better use --pattern and --replace argument
+
+            Security notes:
+            * be carefull with --eval-replace argument. When it's given, value passed to --replace is eval-ed, so any not safe code will be executed!
+
+            Author:
+            Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
+
+            HomePage:
+            http://mysz.github.io/subst/"""
+        ))
     )
 
     p.add_argument('-p', '--pattern', type=str,
