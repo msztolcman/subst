@@ -48,7 +48,7 @@ def show_version():
     """ Show version info and exit.
     """
 
-    disp('{0}: version {1}'.format(os.path.basename(sys.argv[0]), __version__))
+    disp('%s: version %s' % (os.path.basename(sys.argv[0]), __version__))
     sys.exit(0)
 
 
@@ -205,7 +205,7 @@ def _parse_args__pattern(args):
         try:
             # pattern must begin with 's'
             if not pat.startswith('s'):
-                raise ParserException('Bad pattern specified: {0}'.format(args.pattern_and_replace))
+                raise ParserException('Bad pattern specified: %s' % args.pattern_and_replace)
             pat = pat[1:]
 
             # parse pattern
@@ -238,7 +238,7 @@ def _parse_args__pattern(args):
                 re_flags |= re.MULTILINE
 
         except ValueError:
-            raise ParserException('Bad pattern specified: {0}'.format(args.pattern_and_replace))
+            raise ParserException('Bad pattern specified: %s' % args.pattern_and_replace)
 
         if args.ignore_case:
             re_flags |= re.IGNORECASE
@@ -254,7 +254,7 @@ def _parse_args__pattern(args):
 
         return re.compile(pattern, re_flags), replace, count
     else:
-        raise ParserException('Bad pattern specified: {0}'.format(args.pattern_and_replace))
+        raise ParserException('Bad pattern specified: %s' % args.pattern_and_replace)
 
 
 def wrap_text(txt):
@@ -476,12 +476,12 @@ def _process_file__make_backup(path, backup_ext):
     backup_path = os.path.join(root, path + backup_ext)
 
     if os.path.exists(backup_path):
-        raise SubstException('Backup path: "{0}" for file "{1}" already exists, file omitted'.format(backup_path, path))
+        raise SubstException('Backup path: "%s" for file "%s" already exists, file omitted' % (backup_path, path))
 
     try:
         shutil.copy2(path, backup_path)
     except (shutil.Error, IOError) as ex:
-        raise SubstException('Cannot create backup for "{0}": {1}'.format(path, ex))
+        raise SubstException('Cannot create backup for "%s": %s' % (path, ex))
 
     return backup_path
 
@@ -494,7 +494,7 @@ def _process_file__handle(src_path, dst_fh, cfg, replace_func):
     with open(src_path, 'r') as fh_src:
         cnt = replace_func(fh_src, dst_fh, cfg.pattern, cfg.replace, cfg.count)
         if cfg.verbose or cfg.debug:
-            debug('{0} replacements'.format(cnt), 1)
+            debug('%s replacements' % cnt, 1)
 
 
 def _process_file__regular(src_path, cfg, replace_func):
@@ -513,7 +513,7 @@ def _process_file__regular(src_path, cfg, replace_func):
     try:
         os.rename(tmp_path, src_path)
     except OSError as ex:
-        raise SubstException('Error replacing "{0}" with "{1}": {2}'.format(src_path, tmp_path, ex))
+        raise SubstException('Error replacing "%s" with "%s": %s' % (src_path, tmp_path, ex))
     else:
         if cfg.debug:
             debug('moved temporary file to original', 1)
@@ -533,16 +533,16 @@ def process_file(path, replace_func, cfg):
         debug(path)
 
     if not os.path.exists(path):
-        raise SubstException('Path "{0}" doesn\'t exists'.format(path))
+        raise SubstException('Path "%s" doesn\'t exists' % path)
 
     if not os.path.isfile(path) or os.path.islink(path):
-        raise SubstException('Path "{0}" is not a regular file'.format(path))
+        raise SubstException('Path "%s" is not a regular file' % path)
 
     if not cfg.no_backup:
         backup_path = _process_file__make_backup(path, cfg.ext)
 
         if cfg.debug:
-            debug('created backup file: "{0}"'.format(backup_path), 1)
+            debug('created backup file: "%s"' % backup_path, 1)
 
     try:
         if cfg.stdout:
