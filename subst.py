@@ -267,7 +267,7 @@ def wrap_text(txt):
         subsequent_indent='  ',
     )
     txt = [_wrap.fill(line) for line in txt.splitlines()]
-    return "\n".join(txt)
+    return os.linesep.join(txt)
 
 
 # pylint: disable=too-many-branches,too-many-statements
