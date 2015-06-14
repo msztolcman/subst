@@ -411,7 +411,10 @@ def replace_linear(src, dst, pattern, replace, count):
     """
     ret = 0
     for line in src:
-        line = u(line, FILE_ENCODING)
+        try:
+            line = u(line, FILE_ENCODING)
+        except UnicodeDecodeError:
+            raise SubstException("Cannot determine encoding of input data, please use --encoding-file option")
 
         if count == 0 or ret < count:
             line, rest_count = pattern.subn(replace, line, max(0, count - ret))
@@ -430,7 +433,10 @@ def replace_global(src, dst, pattern, replace, count):
         write it to 'dst', and return quantity of replaces.
     """
     data = src.read()
-    data = u(data, FILE_ENCODING)
+    try:
+        data = u(data, FILE_ENCODING)
+    except UnicodeDecodeError:
+        raise SubstException("Cannot determine encoding of input data, please use --encoding-file option")
 
     data, ret = pattern.subn(replace, data, count)
 
@@ -525,14 +531,17 @@ def process_file(path, replace_func, cfg):
         else:
             _process_file__regular(path, cfg, replace_func)
     except SubstException as ex:
-        err(ex)
+        err(u(ex))
 
 
 def main():
     """ Run tool: parse input arguments, read data, replace and save or display.
     """
 
-    args = parse_args(sys.argv[1:])
+    try:
+        args = parse_args(sys.argv[1:])
+    except (UnicodeDecodeError, UnicodeEncodeError):
+        err("Cannot determine encoding of input arguments, please use --encoding-input option", exit_code=1)
 
     if args.linear:
         replace_func = replace_linear
@@ -551,12 +560,8 @@ def main():
 
             try:
                 process_file(path, replace_func, args)
-            except SubstException as ex:
-                if not IS_PY2:
-                    ex = str(ex)
-                else:
-                    ex = unicode(ex)
-                err(u(ex), indent=int(args.verbose or args.debug))
+            except SubstException as exc:
+                err(u(exc), indent=int(args.verbose or args.debug), exit_code=1)
 
 
 if __name__ == '__main__':
