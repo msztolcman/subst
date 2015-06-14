@@ -351,9 +351,6 @@ def parse_args(args):
 
     args = p.parse_args(args)
 
-    if args.version:
-        return args
-
     if args.utf8:
         INPUT_ENCODING = FILE_ENCODING = FILESYSTEM_ENCODING = 'utf8'
     else:
