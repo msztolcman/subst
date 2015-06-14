@@ -53,14 +53,13 @@ Look at result:
 ::
 
     % subst --help
-    usage: subst.py [-h] [-p PATTERN] [-r REPLACE] [--eval-replace] [-t STRING]
-                    [-s "s/PAT/REP/gixsm"] [-c COUNT] [-l] [-i]
-                    [--pattern-dot-all] [--pattern-verbose] [--pattern-multiline]
-                    [--utf8] [--encoding-input ENCODING_INPUT]
-                    [--encoding-file ENCODING_FILE]
-                    [--encoding-filesystem ENCODING_FILESYSTEM] [-b] [-e EXT]
-                    [--stdin] [--stdout] [--verbose] [--debug] [-v]
-                    [files [files ...]]
+    usage: subst [-h] [-p PATTERN] [-r REPLACE] [--eval-replace] [-t STRING]
+                 [-s "s/PAT/REP/gixsm"] [-c COUNT] [-l] [-i] [--pattern-dot-all]
+                 [--pattern-verbose] [--pattern-multiline] [--utf8]
+                 [--encoding-input ENCODING_INPUT] [--encoding-file ENCODING_FILE]
+                 [--encoding-filesystem ENCODING_FILESYSTEM] [-b] [-e EXT]
+                 [--stdin] [--stdout] [--verbose] [--debug] [-v]
+                 [files [files ...]]
 
     Replace PATTERN with REPLACE in many files.
 
@@ -106,10 +105,10 @@ Look at result:
                             --encoding-filesystem
       --encoding-input ENCODING_INPUT
                             set encoding for parameters like --pattern etc
-                            (default for your system: ascii)
+                            (default for your system: utf-8)
       --encoding-file ENCODING_FILE
                             set encoding for content of processed files (default
-                            for your system: ascii)
+                            for your system: utf-8)
       --encoding-filesystem ENCODING_FILESYSTEM
                             set encoding for paths and filenames (default for your
                             system: utf-8)
@@ -122,7 +121,7 @@ Look at result:
                             place(implies --no-backup)
       --verbose             show files and how many replacements was done
       --debug               show more informations
-      -v, --version         show version and exit
+      -v, --version         show program's version number and exit
 
     Miscellaneous notes:
     * regular expressions engine used here is PCRE, dialect from Python
@@ -134,7 +133,7 @@ Look at result:
       --count is equal 1
     * if only --count is given, this value is used
     * if --eval-replace is given, --replace must be valid Python code, where
-      can be used m variable.m holds MatchObject instance (see:
+      can be used m variable. m holds MatchObject instance (see:
       http://http://docs.python.org/2/library/re.html#match-objects, for
       example:
         --eval-replace --replace 'm.group(1).lower()'
@@ -242,6 +241,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ChangeLog
 ---------
+
+v0.5.0
+~~~~~~
+
+-  many improvements to handling different encodings
+-  improvements to pylintrc, Makefile
+-  config for tox
+-  many refactorings
 
 v0.4.0
 ~~~~~~
