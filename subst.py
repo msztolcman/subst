@@ -458,7 +458,7 @@ def _process_file__make_backup(path, backup_ext):
     backup_path = os.path.join(root, path + backup_ext)
 
     if os.path.exists(backup_path):
-        raise SubstException('Backup path: "%s" for file "%s" already exists, file omitted' % (backup_path, path))
+        raise SubstException('Backup path: "%s" for file "%s" already exists, file skipped' % (backup_path, path))
 
     try:
         shutil.copy2(path, backup_path)
