@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Subst by mysz</title>
+    <title>Subst by msztolcman</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-light.css">
@@ -20,12 +20,12 @@
         <p class="header">Search and des... argh... replace in many files at once. Use regexp and power of Python to replace what you want.</p>
 
         <ul>
-          <li class="download"><a class="buttons" href="https://github.com/mysz/subst/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/mysz/subst/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/mysz/subst">View On GitHub</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/msztolcman/subst/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/msztolcman/subst/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/msztolcman/subst">View On GitHub</a></li>
         </ul>
 
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/mysz">mysz</a></p>
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/msztolcman">msztolcman</a></p>
 
 
       </header>
@@ -83,14 +83,13 @@ simpler to use.</p>
 <p>Look at result:</p>
 
 <pre><code>% subst --help
-usage: subst.py [-h] [-p PATTERN] [-r REPLACE] [--eval-replace] [-t STRING]
-                [-s "s/PAT/REP/gixsm"] [-c COUNT] [-l] [-i]
-                [--pattern-dot-all] [--pattern-verbose] [--pattern-multiline]
-                [--utf8] [--encoding-input ENCODING_INPUT]
-                [--encoding-file ENCODING_FILE]
-                [--encoding-filesystem ENCODING_FILESYSTEM] [-b] [-e EXT]
-                [--stdin] [--stdout] [--verbose] [--debug] [-v]
-                [files [files ...]]
+usage: subst [-h] [-p PATTERN] [-r REPLACE] [--eval-replace] [-t STRING]
+             [-s "s/PAT/REP/gixsm"] [-c COUNT] [-l] [-i] [--pattern-dot-all]
+             [--pattern-verbose] [--pattern-multiline] [--utf8]
+             [--encoding-input ENCODING_INPUT] [--encoding-file ENCODING_FILE]
+             [--encoding-filesystem ENCODING_FILESYSTEM] [-b] [-e EXT]
+             [--stdin] [--stdout] [--verbose] [--debug] [-v]
+             [files [files ...]]
 
 Replace PATTERN with REPLACE in many files.
 
@@ -136,10 +135,10 @@ optional arguments:
                         --encoding-filesystem
   --encoding-input ENCODING_INPUT
                         set encoding for parameters like --pattern etc
-                        (default for your system: ascii)
+                        (default for your system: utf-8)
   --encoding-file ENCODING_FILE
                         set encoding for content of processed files (default
-                        for your system: ascii)
+                        for your system: utf-8)
   --encoding-filesystem ENCODING_FILESYSTEM
                         set encoding for paths and filenames (default for your
                         system: utf-8)
@@ -152,7 +151,7 @@ optional arguments:
                         place(implies --no-backup)
   --verbose             show files and how many replacements was done
   --debug               show more informations
-  -v, --version         show version and exit
+  -v, --version         show program's version number and exit
 
 Miscellaneous notes:
 * regular expressions engine used here is PCRE, dialect from Python
@@ -164,7 +163,7 @@ Miscellaneous notes:
   --count is equal 1
 * if only --count is given, this value is used
 * if --eval-replace is given, --replace must be valid Python code, where
-  can be used m variable.m holds MatchObject instance (see:
+  can be used m variable. m holds MatchObject instance (see:
   http://http://docs.python.org/2/library/re.html#match-objects, for
   example:
     --eval-replace --replace 'm.group(1).lower()'
@@ -185,7 +184,7 @@ Author:
 Marcin Sztolcman &lt;marcin@urzenia.net&gt; // http://urzenia.net
 
 HomePage:
-http://mysz.github.io/subst/
+http://msztolcman.github.io/subst/
 </code></pre>
 
 <h2>
@@ -207,16 +206,16 @@ with 192.168.0.X in <code>/etc/hosts</code>:</p>
 
 <p><code>subst</code> should work on any platform where <a href="http://python.org">Python</a> is available, it means Linux, Windows, MacOS X etc. There is no dependencies, plain Python power :)</p>
 
-<p>To install, go to <a href="https://github.com/mysz/subst/releases">GitHub releases</a>, download newest release, unpack and put somewhere in <code>PATH</code> (ie. <code>~/bin</code> or <code>/usr/local/bin</code>).</p>
+<p>To install, go to <a href="https://github.com/msztolcman/subst/releases">GitHub releases</a>, download newest release, unpack and put somewhere in <code>PATH</code> (ie. <code>~/bin</code> or <code>/usr/local/bin</code>).</p>
 
 <p>If You want to install newest unstable version, then just copy file to your PATH, for example:</p>
 
-<pre><code>curl https://raw.github.com/mysz/subst/master/subst.py &gt; /usr/local/bin/subst
+<pre><code>curl https://raw.github.com/msztolcman/subst/master/subst.py &gt; /usr/local/bin/subst
 </code></pre>
 
 <p>or:</p>
 
-<pre><code>wget https://raw.github.com/mysz/subst/master/subst.py -O /usr/local/bin/subst
+<pre><code>wget https://raw.github.com/msztolcman/subst/master/subst.py -O /usr/local/bin/subst
 </code></pre>
 
 <p>Voila!</p>
@@ -231,7 +230,7 @@ with 192.168.0.X in <code>/etc/hosts</code>:</p>
 
 <p>If you like or dislike this software, please do not hesitate to tell me about this me via email (<a href="mailto:marcin@urzenia.net">marcin@urzenia.net</a>).</p>
 
-<p>If you find bug or have an idea to enhance this tool, please use GitHub's <a href="https://github.com/mysz/subst/issues">issues</a>.</p>
+<p>If you find bug or have an idea to enhance this tool, please use GitHub's <a href="https://github.com/msztolcman/subst/issues">issues</a>.</p>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
@@ -259,6 +258,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
 
 <h2>
 <a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span class="octicon octicon-link"></span></a>ChangeLog</h2>
+
+<h3>
+<a id="v050" class="anchor" href="#v050" aria-hidden="true"><span class="octicon octicon-link"></span></a>v0.5.0</h3>
+
+<ul>
+<li>many improvements to handling different encodings</li>
+<li>improvements to pylintrc, Makefile</li>
+<li>config for tox</li>
+<li>many refactorings</li>
+</ul>
 
 <h3>
 <a id="v040" class="anchor" href="#v040" aria-hidden="true"><span class="octicon octicon-link"></span></a>v0.4.0</h3>
