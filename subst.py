@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """ subst - Replace PATTERN with REPLACE in many files.
-    http://mysz.github.io/subst
+    http://msztolcman.github.io/subst
     Author: Marcin Sztolcman (marcin@urzenia.net)
 
     Get help with: subst --help
@@ -297,7 +297,7 @@ def parse_args(args):
             Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
 
             HomePage:
-            http://mysz.github.io/subst/"""
+            http://msztolcman.github.io/subst/"""
         ))
     )
 
