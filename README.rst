@@ -154,7 +154,7 @@ Look at result:
     Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
 
     HomePage:
-    http://mysz.github.io/subst/
+    http://msztolcman.github.io/subst/
 
 Some examples?
 --------------
@@ -180,8 +180,8 @@ Installation
 MacOS X etc. There is no dependencies, plain Python power :)
 
 To install, go to `GitHub
-releases <https://github.com/mysz/subst/releases>`__, download newest
-release, unpack and put somewhere in ``PATH`` (ie. ``~/bin`` or
+releases <https://github.com/msztolcman/subst/releases>`__, download
+newest release, unpack and put somewhere in ``PATH`` (ie. ``~/bin`` or
 ``/usr/local/bin``).
 
 If You want to install newest unstable version, then just copy file to
@@ -189,13 +189,13 @@ your PATH, for example:
 
 ::
 
-    curl https://raw.github.com/mysz/subst/master/subst.py > /usr/local/bin/subst
+    curl https://raw.github.com/msztolcman/subst/master/subst.py > /usr/local/bin/subst
 
 or:
 
 ::
 
-    wget https://raw.github.com/mysz/subst/master/subst.py -O /usr/local/bin/subst
+    wget https://raw.github.com/msztolcman/subst/master/subst.py -O /usr/local/bin/subst
 
 Voila!
 
@@ -211,7 +211,7 @@ If you like or dislike this software, please do not hesitate to tell me
 about this me via email (marcin@urzenia.net).
 
 If you find bug or have an idea to enhance this tool, please use
-GitHub's `issues <https://github.com/mysz/subst/issues>`__.
+GitHub's `issues <https://github.com/msztolcman/subst/issues>`__.
 
 License
 -------
