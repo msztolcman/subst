@@ -4,6 +4,9 @@ subst
 ``subst`` is simple utility to replace one string into another in given
 list of files.
 
+If you like this tool, just `say
+thanks <https://saythanks.io/to/msztolcman>`__.
+
 Current stable version
 ----------------------
 
