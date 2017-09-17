@@ -230,10 +230,13 @@ ChangeLog
 
 ### v0.5.0
 
-* many improvements to handling different encodings
+* improvements to handling different encodings
+* exit code give us info about there was any changes
 * improvements to pylintrc, Makefile
 * config for tox
 * many refactorings
+* fixes and improvements in built-in help
+* marked as compatible with Python 3.5 and 3.6
 
 ### v0.4.0
 
@@ -243,7 +246,7 @@ ChangeLog
 
 ### v0.3.1
 
-* prepared and uploaded to PYPI 
+* prepared and uploaded to PYPI
 * typos and editorials
 
 ### v0.3
