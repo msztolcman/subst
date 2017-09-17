@@ -319,7 +319,7 @@ def parse_args(args):
     p.add_argument('--eval-replace', dest='eval', action='store_true',
                    help='if specified, make eval data from --replace(should be valid Python code). Ignored with '
                    '--pattern-and-replace argument.')
-    p.add_argument('-t', '--string', type=bool,
+    p.add_argument('-t', '--string', action='store_true',
                    help='if specified, treats --pattern as string, not as regular expression. Ignored with '
                    '--pattern-and-replace argument.')
     p.add_argument('-s', '--pattern-and-replace', '--pattern-and-replace', metavar='"s/PAT/REP/gixsm"', type=str,
