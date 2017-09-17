@@ -145,19 +145,40 @@ def _parse_args__eval_replacement(repl):
     return _
 
 
-def _parse_args__split_bracketed_pattern(delim, pattern):
+def _parse_args__parse_pattern(pat):
     """
-    Helper for parsing arguments: search user-given pattern for delim
-    and extract flags, replacement and specific pattern from it
-    :param delim:
-    :param pattern:
+    Split pattern into search, replacement and flags.
+    :param pat:
     :return:
     """
-    pattern, replace = pattern[1:].split(delim[::-1], 1)
-    if replace.endswith(delim[1]):
-        flags = ''
+
+    def _parse_args__split_bracketed_pattern(delim, pattern):
+        """
+        Helper for parsing arguments: search user-given pattern for delim
+        and extract flags, replacement and specific pattern from it
+        :param delim:
+        :param pattern:
+        :return:
+        """
+        pattern, replace = pattern[1:].split(delim[::-1], 1)
+        if replace.endswith(delim[1]):
+            flags = ''
+        else:
+            replace, flags = replace.rsplit(delim[1], 1)
+
+        return pattern, replace, flags
+
+    if pat.startswith('('):
+        pattern, replace, flags = _parse_args__split_bracketed_pattern('()', pat)
+    elif pat.startswith('{'):
+        pattern, replace, flags = _parse_args__split_bracketed_pattern('{}', pat)
+    elif pat.startswith('['):
+        pattern, replace, flags = _parse_args__split_bracketed_pattern('[]', pat)
+    elif pat.startswith('<'):
+        pattern, replace, flags = _parse_args__split_bracketed_pattern('<>', pat)
     else:
-        replace, flags = replace.rsplit(delim[1], 1)
+        delim, pat = pat[0], pat[1:]
+        pattern, replace, flags = pat.split(delim, 2)
 
     return pattern, replace, flags
 
@@ -199,18 +220,7 @@ def _parse_args__pattern(args):
                 raise ParserException('Bad pattern specified: %s' % args.pattern_and_replace)
             pat = pat[1:]
 
-            # parse pattern
-            if pat.startswith('('):
-                pattern, replace, flags = _parse_args__split_bracketed_pattern('()', pat)
-            elif pat.startswith('{'):
-                pattern, replace, flags = _parse_args__split_bracketed_pattern('{}', pat)
-            elif pat.startswith('['):
-                pattern, replace, flags = _parse_args__split_bracketed_pattern('[]', pat)
-            elif pat.startswith('<'):
-                pattern, replace, flags = _parse_args__split_bracketed_pattern('<>', pat)
-            else:
-                delim, pat = pat[0], pat[1:]
-                pattern, replace, flags = pat.split(delim, 2)
+            pattern, replace, flags = _parse_args__parse_pattern(pat)
 
             if 'g' in flags:
                 count = 0
