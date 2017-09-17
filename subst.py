@@ -332,11 +332,11 @@ def parse_args(args):
                    help='ignore case of characters when matching')
     p.add_argument('--pattern-dot-all', dest='pattern_dot_all', action='store_true',
                    help='with this flag, dot(.) character in pattern match also new line character (see: '
-                   'http://docs.python.org/2/library/re.html#re.DOTALL).')
+                   'https://docs.python.org/3/library/re.html#re.DOTALL).')
     p.add_argument('--pattern-verbose', dest='pattern_verbose', action='store_true',
-                   help='with this flag pattern can be passed as verbose(see: http://docs.python.org/2/library/re.html#re.VERBOSE).')
+                   help='with this flag pattern can be passed as verbose(see: https://docs.python.org/3/library/re.html#re.VERBOSE).')
     p.add_argument('--pattern-multiline', dest='pattern_multiline', action='store_true',
-                   help='with this flag pattern can be passed as multiline(see: http://docs.python.org/2/library/re.html#re.MULTILINE).')
+                   help='with this flag pattern can be passed as multiline(see: https://docs.python.org/3/library/re.html#re.MULTILINE).')
     p.add_argument('-u', '--utf8', action='store_true',
                    help='Use UTF-8 in --encoding-input, --encoding-file and --encoding-filesystem')
     p.add_argument('--encoding-input', type=str, default=INPUT_ENCODING,
