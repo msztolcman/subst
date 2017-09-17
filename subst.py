@@ -337,7 +337,7 @@ def parse_args(args):
                    help='with this flag pattern can be passed as verbose(see: http://docs.python.org/2/library/re.html#re.VERBOSE).')
     p.add_argument('--pattern-multiline', dest='pattern_multiline', action='store_true',
                    help='with this flag pattern can be passed as multiline(see: http://docs.python.org/2/library/re.html#re.MULTILINE).')
-    p.add_argument('--utf8', '-u', action='store_true',
+    p.add_argument('-u', '--utf8', action='store_true',
                    help='Use UTF-8 in --encoding-input, --encoding-file and --encoding-filesystem')
     p.add_argument('--encoding-input', type=str, default=INPUT_ENCODING,
                    help='set encoding for parameters like --pattern etc (default for your system: %s)' % INPUT_ENCODING)
