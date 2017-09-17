@@ -299,6 +299,7 @@ def parse_args(args):
                 --eval-replace --replace 'm.group(1).lower()'
             * regular expressions with non linear search read whole file to yours computer memory - if file size is bigger then you have memory in your computer, it fails
             * parsing expression passed to --pattern-and-replace argument is very simple - if you use / as delimiter, then in your expression can't be used this character anymore. If you need to use same character as delimiter and in expression, then better use --pattern and --replace arguments
+            * you can test exit code to verify there was made any changes (exit code = 0) or not (exit code = 1)
 
             Security notes:
             * be careful with --eval-replace argument. When it's given, value passed to --replace is eval-ed, so any unsafe code will be executed!
@@ -354,7 +355,7 @@ def parse_args(args):
     p.add_argument('--stdout', action='store_true',
                    help='output data to STDOUT instead of change files in-place(implies --no-backup)')
     p.add_argument('--verbose', action='store_true',
-                   help='show files and how many replacements was done')
+                   help='show files and how many replacements was done and short summary')
     p.add_argument('--debug', action='store_true',
                    help='show more informations')
     p.add_argument('-v', '--version', action='version',
@@ -488,6 +489,8 @@ def _process_file__handle(src_path, dst_fh, cfg, replace_func):
         if cfg.verbose or cfg.debug:
             debug('%s replacements' % cnt, indent=1)
 
+    return cnt
+
 
 def _process_file__regular(src_path, cfg, replace_func):
     """ Read data from `src_path`, replace data with `replace_func` and
@@ -500,7 +503,7 @@ def _process_file__regular(src_path, cfg, replace_func):
     tmp_fh, tmp_path = tempfile.mkstemp()
     tmp_fh = os.fdopen(tmp_fh, 'w')
 
-    _process_file__handle(src_path, tmp_fh, cfg, replace_func)
+    cnt = _process_file__handle(src_path, tmp_fh, cfg, replace_func)
 
     try:
         os.rename(tmp_path, src_path)
@@ -515,6 +518,8 @@ def _process_file__regular(src_path, cfg, replace_func):
     # pylint: disable=bare-except
     except:
         pass
+
+    return cnt
 
 
 def process_file(path, replace_func, cfg):
@@ -536,13 +541,16 @@ def process_file(path, replace_func, cfg):
         if cfg.debug:
             debug('created backup file: "%s"' % backup_path, indent=1)
 
+    cnt = 0
     try:
         if cfg.stdout:
-            _process_file__handle(path, sys.stdout, cfg, replace_func)
+            cnt = _process_file__handle(path, sys.stdout, cfg, replace_func)
         else:
-            _process_file__regular(path, cfg, replace_func)
+            cnt = _process_file__regular(path, cfg, replace_func)
     except SubstException as ex:
         err(u(ex))
+
+    return cnt
 
 
 def main():
@@ -560,9 +568,12 @@ def main():
         replace_func = replace_global
 
     if args.stdin:
-        replace_func(sys.stdin, sys.stdout, args.pattern, args.replace, args.count)
+        cnt_changes = replace_func(sys.stdin, sys.stdout, args.pattern, args.replace, args.count)
+        cnt_changed_files = 0
 
     else:
+        cnt_changes = 0
+        cnt_changed_files = 0
         for path in args.files:
             path = u(path, FILESYSTEM_ENCODING)
             path = unicodedata.normalize('NFKC', path)
@@ -570,10 +581,20 @@ def main():
             path = os.path.abspath(path)
 
             try:
-                process_file(path, replace_func, args)
+                cnt_changes_single = process_file(path, replace_func, args)
+                if cnt_changes_single > 0:
+                    cnt_changes += cnt_changes_single
+                    cnt_changed_files += 1
             except SubstException as exc:
                 err(u(exc), indent=int(args.verbose or args.debug), exit_code=1)
 
+    if args.verbose:
+        debug('There was %d changes in %d files.' % (cnt_changes, cnt_changed_files))
+
+    if cnt_changes > 0:
+        return 0
+    else:
+        return 1
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
