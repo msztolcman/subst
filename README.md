@@ -163,11 +163,23 @@ with 192.168.0.X in `/etc/hosts`:
 Installation
 ------------
 
-`subst` should work on any platform where [Python](http://python.org) is available, it means Linux, Windows, MacOS X etc. There is no dependencies, plain Python power :)
+`subst` should work on any platform where [Python](http://python.org) is available,
+it means Linux, Windows, MacOS X etc. There is no dependencies, plain Python power :)
 
-To install, go to [GitHub releases](https://github.com/msztolcman/subst/releases), download newest release, unpack and put somewhere in `PATH` (ie. `~/bin` or `/usr/local/bin`).
+1. Installtion using PIP
 
-If You want to install newest unstable version, then just copy file to your PATH, for example:
+Simplest way is to use Python's built-in package system:
+
+    pip install subst
+
+2. Using sources
+
+To install, go to [GitHub releases](https://github.com/msztolcman/subst/releases),
+download newest release, unpack and put somewhere in `PATH` (ie. `~/bin`
+or `/usr/local/bin`).
+
+If You want to install newest unstable version, then just copy file to your PATH,
+for example:
 
     curl https://raw.github.com/msztolcman/subst/master/subst.py > /usr/local/bin/subst
 
