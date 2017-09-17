@@ -13,6 +13,7 @@ from __future__ import print_function, unicode_literals, division
 
 import argparse
 import codecs
+import functools
 import os
 import os.path
 import re
@@ -29,6 +30,9 @@ FILESYSTEM_ENCODING = sys.getfilesystemencoding()
 FILE_ENCODING = sys.getdefaultencoding()
 INPUT_ENCODING = sys.getdefaultencoding()
 DEFAULT_BACKUP_EXTENSION = 'bak'
+
+
+file_opener = functools.partial(open, newline='') if not IS_PY2 else open
 
 
 class SubstException(Exception):
@@ -484,7 +488,7 @@ def _process_file__handle(src_path, dst_fh, cfg, replace_func):
         save it to `dst_fh`.
     """
 
-    with open(src_path, 'r') as fh_src:
+    with file_opener(src_path, 'r') as fh_src:
         cnt = replace_func(fh_src, dst_fh, cfg.pattern, cfg.replace, cfg.count)
         if cfg.verbose or cfg.debug:
             debug('%s replacements' % cnt, indent=1)
