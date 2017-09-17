@@ -45,102 +45,104 @@ Everything is in help :) Just execute:
 Look at result:
 
     % subst --help
-    usage: subst [-h] [-p PATTERN] [-r REPLACE] [--eval-replace] [-t STRING]
-                 [-s "s/PAT/REP/gixsm"] [-c COUNT] [-l] [-i] [--pattern-dot-all]
-                 [--pattern-verbose] [--pattern-multiline] [--utf8]
-                 [--encoding-input ENCODING_INPUT] [--encoding-file ENCODING_FILE]
-                 [--encoding-filesystem ENCODING_FILESYSTEM] [-b] [-e EXT]
-                 [--stdin] [--stdout] [--verbose] [--debug] [-v]
-                 [files [files ...]]
+    usage: subst.py [-h] [-p PATTERN] [-r REPLACE] [--eval-replace] [-t]
+                    [-s "s/PAT/REP/gixsm"] [-c COUNT] [-l] [-i]
+                    [--pattern-dot-all] [--pattern-verbose] [--pattern-multiline]
+                    [-u] [--encoding-input ENCODING_INPUT]
+                    [--encoding-file ENCODING_FILE]
+                    [--encoding-filesystem ENCODING_FILESYSTEM] [-b] [-e EXT]
+                    [--stdin] [--stdout] [--verbose] [--debug] [-v]
+                    [files [files ...]]
     
     Replace PATTERN with REPLACE in many files.
     
     positional arguments:
-      files                 file to parse.
+    files                 files to parse
     
     optional arguments:
-      -h, --help            show this help message and exit
-      -p PATTERN, --pattern PATTERN
+    -h, --help            show this help message and exit
+    -p PATTERN, --pattern PATTERN
                             pattern to replace for. Supersede --pattern-and-
                             replace. Required if --replace is specified.
-      -r REPLACE, --replace REPLACE
+    -r REPLACE, --replace REPLACE
                             replacement. Supersede --pattern-and-replace. Required
                             if --pattern is specified.
-      --eval-replace        if specified, make eval data from --replace(should be
+    --eval-replace        if specified, make eval data from --replace(should be
                             valid Python code). Ignored with --pattern-and-replace
                             argument.
-      -t STRING, --string STRING
-                            if specified, treats --pattern as string, not as
+    -t, --string          if specified, treats --pattern as string, not as
                             regular expression. Ignored with --pattern-and-replace
                             argument.
-      -s "s/PAT/REP/gixsm", --pattern-and-replace "s/PAT/REP/gixsm", --pattern-and-replace "s/PAT/REP/gixsm"
+    -s "s/PAT/REP/gixsm", --pattern-and-replace "s/PAT/REP/gixsm", --pattern-and-replace "s/PAT/REP/gixsm"
                             pattern and replacement in one:
                             s/pattern/replace/g(pattern is always regular
                             expression, /g is optional and stands for --count=0,
                             /i == --ignore-case, /s == --pattern-dot-all, /m ==
                             --pattern-multiline).
-      -c COUNT, --count COUNT
+    -c COUNT, --count COUNT
                             make COUNT replacements for every file (0 makes
                             unlimited changes, default).
-      -l, --linear          apply pattern for every line separately. Without this
+    -l, --linear          apply pattern for every line separately. Without this
                             flag whole file is read into memory.
-      -i, --ignore-case     ignore case of characters when matching
-      --pattern-dot-all     with this flag, dot(.) character in pattern match also
+    -i, --ignore-case     ignore case of characters when matching
+    --pattern-dot-all     with this flag, dot(.) character in pattern match also
                             new line character (see:
-                            http://docs.python.org/2/library/re.html#re.DOTALL).
-      --pattern-verbose     with this flag pattern can be passed as verbose(see:
-                            http://docs.python.org/2/library/re.html#re.VERBOSE).
-      --pattern-multiline   with this flag pattern can be passed as multiline(see:
-                            http://docs.python.org/2/library/re.html#re.MULTILINE)
-                            .
-      --utf8, -u            Use UTF-8 in --encoding-input, --encoding-file and
+                            https://docs.python.org/3/library/re.html#re.DOTALL).
+    --pattern-verbose     with this flag pattern can be passed as verbose(see:
+                            https://docs.python.org/3/library/re.html#re.VERBOSE).
+    --pattern-multiline   with this flag pattern can be passed as multiline(see:
+                            https://docs.python.org/3/library/re.html#re.MULTILINE
+                            ).
+    -u, --utf8            Use UTF-8 in --encoding-input, --encoding-file and
                             --encoding-filesystem
-      --encoding-input ENCODING_INPUT
+    --encoding-input ENCODING_INPUT
                             set encoding for parameters like --pattern etc
-                            (default for your system: utf-8)
-      --encoding-file ENCODING_FILE
+                            (default for your system: ascii)
+    --encoding-file ENCODING_FILE
                             set encoding for content of processed files (default
-                            for your system: utf-8)
-      --encoding-filesystem ENCODING_FILESYSTEM
+                            for your system: ascii)
+    --encoding-filesystem ENCODING_FILESYSTEM
                             set encoding for paths and filenames (default for your
                             system: utf-8)
-      -b, --no-backup       disable creating backup of modified files.
-      -e EXT, --backup-extension EXT
+    -b, --no-backup       don't create backup of modified files.
+    -e EXT, --backup-extension EXT
                             extension for backup files(ignore if no backup is
                             created), without leading dot. Defaults to: "bak".
-      --stdin               read data from STDIN(implies --stdout)
-      --stdout              output data to STDOUT instead of change files in-
+    --stdin               read data from STDIN(implies --stdout)
+    --stdout              output data to STDOUT instead of change files in-
                             place(implies --no-backup)
-      --verbose             show files and how many replacements was done
-      --debug               show more informations
-      -v, --version         show program's version number and exit
+    --verbose             show files and how many replacements was done and
+                            short summary
+    --debug               show more informations
+    -v, --version         show program's version number and exit
     
     Miscellaneous notes:
     * regular expressions engine used here is PCRE, dialect from Python
     * is required to pass either --pattern and -replace, or --pattern-and-
-      replace argument
+    replace argument
     * if pattern passed to --pattern-and-replace has /g modifier, it
-      overwrites --count value
+    overwrites --count value
     * if neither /g modifier nor --count argument is passed, assume that
-      --count is equal 1
+    --count is equal 1
     * if only --count is given, this value is used
     * if --eval-replace is given, --replace must be valid Python code, where
-      can be used m variable. m holds MatchObject instance (see:
-      http://http://docs.python.org/2/library/re.html#match-objects, for
-      example:
+    can be used m variable. m holds MatchObject instance (see:
+    https://docs.python.org/3/library/re.html#match-objects, for example:
         --eval-replace --replace 'm.group(1).lower()'
     * regular expressions with non linear search read whole file to yours
-      computer memory - if file size is bigger then you have memory in your
-      computer, it fails
+    computer memory - if file size is bigger then you have memory in your
+    computer, it fails
     * parsing expression passed to --pattern-and-replace argument is very
-      simple - if you use / as delimiter, then in your expression can't be
-      used this character anymore. If you need to use same character as
-      delimiter and in expression, then better use --pattern and --replace
-      argument
+    simple - if you use / as delimiter, then in your expression can't be
+    used this character anymore. If you need to use same character as
+    delimiter and in expression, then better use --pattern and --replace
+    arguments
+    * you can test exit code to verify there was made any changes (exit code
+    = 0) or not (exit code = 1)
     
     Security notes:
-    * be carefull with --eval-replace argument. When it's given, value
-      passed to --replace is eval-ed, so any not safe code will be executed!
+    * be careful with --eval-replace argument. When it's given, value passed
+    to --replace is eval-ed, so any unsafe code will be executed!
     
     Author:
     Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
@@ -228,14 +230,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ChangeLog
 ---------
 
-### v0.5.0
+### coming
 
 * improvements to handling different encodings
 * exit code give us info about there was any changes
 * improvements to pylintrc, Makefile
 * config for tox
-* many refactorings
 * fixes and improvements in built-in help
+* fixed but with changing new-line characters from dos to unix (issue #5)
+* fixed bug with bad interpretation of -t param (issue #4)
+* fixed bug with using subst on Windows (issue #2)
+* many refactorings
 * marked as compatible with Python 3.5 and 3.6
 
 ### v0.4.0
