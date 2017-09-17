@@ -298,10 +298,10 @@ def parse_args(args):
             * if --eval-replace is given, --replace must be valid Python code, where can be used m variable. m holds MatchObject instance (see: https://docs.python.org/3/library/re.html#match-objects, for example:
                 --eval-replace --replace 'm.group(1).lower()'
             * regular expressions with non linear search read whole file to yours computer memory - if file size is bigger then you have memory in your computer, it fails
-            * parsing expression passed to --pattern-and-replace argument is very simple - if you use / as delimiter, then in your expression can't be used this character anymore. If you need to use same character as delimiter and in expression, then better use --pattern and --replace argument
+            * parsing expression passed to --pattern-and-replace argument is very simple - if you use / as delimiter, then in your expression can't be used this character anymore. If you need to use same character as delimiter and in expression, then better use --pattern and --replace arguments
 
             Security notes:
-            * be carefull with --eval-replace argument. When it's given, value passed to --replace is eval-ed, so any not safe code will be executed!
+            * be careful with --eval-replace argument. When it's given, value passed to --replace is eval-ed, so any unsafe code will be executed!
 
             Author:
             Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
@@ -346,7 +346,7 @@ def parse_args(args):
     p.add_argument('--encoding-filesystem', type=str, default=FILESYSTEM_ENCODING,
                    help='set encoding for paths and filenames (default for your system: %s)' % FILESYSTEM_ENCODING)
     p.add_argument('-b', '--no-backup', dest='no_backup', action='store_true',
-                   help='disable creating backup of modified files.')
+                   help='don\'t create backup of modified files.')
     p.add_argument('-e', '--backup-extension', dest='ext', default=DEFAULT_BACKUP_EXTENSION, type=str,
                    help='extension for backup files(ignore if no backup is created), without leading dot. Defaults to: "bak".')
     p.add_argument('--stdin', action='store_true',
@@ -360,7 +360,7 @@ def parse_args(args):
     p.add_argument('-v', '--version', action='version',
         version="%s %s\n%s" % (os.path.basename(sys.argv[0]), __version__, args_description))
     p.add_argument('files', nargs='*', type=str,
-                   help='file to parse.')
+                   help='files to parse')
 
     args = p.parse_args(args)
 
