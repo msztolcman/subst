@@ -510,18 +510,18 @@ def _process_file__regular(src_path, cfg, replace_func):
     cnt = _process_file__handle(src_path, tmp_fh, cfg, replace_func)
 
     try:
-        os.rename(tmp_path, src_path)
+        tmp_fh.close()
+    # pylint: disable=bare-except
+    except:
+        pass
+
+    try:
+        shutil.move(tmp_path, src_path)
     except OSError as ex:
         raise SubstException('Error replacing "%s" with "%s": %s' % (src_path, tmp_path, ex))
     else:
         if cfg.debug:
             debug('moved temporary file to original', indent=1)
-
-    try:
-        tmp_fh.close()
-    # pylint: disable=bare-except
-    except:
-        pass
 
     return cnt
 
