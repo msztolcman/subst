@@ -13,8 +13,7 @@ from __future__ import print_function, unicode_literals, division
 
 import argparse
 import codecs
-import functools
-import glob
+import fnmatch
 import os
 import os.path
 import re
@@ -277,7 +276,7 @@ def _parse_args__expand_wildcards(paths):
     """
     _paths = []
     for path in paths:
-        _paths.extend(glob.glob(path))
+        _paths.extend(glob(path))
 
     return _paths
 
@@ -297,6 +296,31 @@ def wrap_text(txt):
     )
     txt = [_wrap.fill(line) for line in txt.splitlines()]
     return os.linesep.join(txt)
+
+
+def glob(pattern):
+    root, pattern = os.path.split(pattern)
+    if not pattern:
+        return root
+    if not root:
+        root = '.'
+
+    try:
+        items = [item.name for item in os.scandir(root)]
+    except AttributeError:
+        items = os.listdir(root)
+
+    items = map(lambda item: unicodedata.normalize('NFKC', item), items)
+    items = fnmatch.filter(items, pattern)
+    return [os.path.join(root, item) for item in items]
+
+
+def _parse_args__prepare_path(path):
+    path = os.path.abspath(path)
+    path = u(path, FILESYSTEM_ENCODING)
+    path = unicodedata.normalize('NFKC', path)
+
+    return path
 
 
 # pylint: disable=too-many-branches,too-many-statements
@@ -405,15 +429,14 @@ def parse_args(args):
     except LookupError as exc:
         p.error(exc)
 
-    if not args.files:
+    stdin_dash = '-' if not IS_PY2 else str('-')
+    if not args.files or args.files[0] == stdin_dash:
         args.stdin = True
     else:
-        if args.files[0] == '-':
-            args.stdin = True
-        else:
-            args.files = [u(path, FILESYSTEM_ENCODING) for path in args.files]
-            if args.expand_wildcards:
-                args.files = _parse_args__expand_wildcards(args.files)
+        args.files = list(map(_parse_args__prepare_path, args.files))
+
+        if args.expand_wildcards:
+            args.files = _parse_args__expand_wildcards(args.files)
 
     if args.stdin:
         args.stdout = True
@@ -603,11 +626,6 @@ def main():
     else:
         cnt_changes = cnt_changed_files = 0
         for path in args.files:
-            path = u(path, FILESYSTEM_ENCODING)
-            path = unicodedata.normalize('NFKC', path)
-            path = os.path.expanduser(path)
-            path = os.path.abspath(path)
-
             try:
                 cnt_changes_single = process_file(path, replace_func, args)
                 if cnt_changes_single > 0:
