@@ -374,7 +374,7 @@ def parse_args(args):
                    help='read data from STDIN(implies --stdout)')
     p.add_argument('--stdout', action='store_true',
                    help='output data to STDOUT instead of change files in-place(implies --no-backup)')
-    p.add_argument('--verbose', action='store_true',
+    p.add_argument('-V', '--verbose', action='store_true',
                    help='show files and how many replacements was done and short summary')
     p.add_argument('--debug', action='store_true',
                    help='show more informations')
