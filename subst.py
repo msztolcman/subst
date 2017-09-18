@@ -513,7 +513,7 @@ def _process_file__handle(src_path, dst_fh, cfg, replace_func):
         save it to `dst_fh`.
     """
 
-    with file_opener(src_path, 'r') as fh_src:
+    with file_opener(src_path, 'rb') as fh_src:
         cnt = replace_func(fh_src, dst_fh, cfg.pattern, cfg.replace, cfg.count)
         if cfg.verbose or cfg.debug:
             debug('%s %s' % (cnt, _plural_s(cnt, 'replacement')), indent=1)
