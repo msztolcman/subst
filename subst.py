@@ -368,7 +368,7 @@ def parse_args(args):
                    help='don\'t create backup of modified files.')
     p.add_argument('-e', '--backup-extension', dest='ext', default=DEFAULT_BACKUP_EXTENSION, type=str,
                    help='extension for backup files(ignore if no backup is created), without leading dot. Defaults to: "bak".')
-    p.add_argument('--expand-wildcards', action='store_true',
+    p.add_argument('-W', '--expand-wildcards', action='store_true',
                    help='expand wildcards (see: https://docs.python.org/3/library/glob.html) in paths')
     p.add_argument('--stdin', action='store_true',
                    help='read data from STDIN(implies --stdout)')
