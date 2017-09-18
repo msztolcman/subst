@@ -237,7 +237,7 @@ ChangeLog
 * improvements to pylintrc, Makefile
 * config for tox
 * fixes and improvements in built-in help
-* fixed but with changing new-line characters from dos to unix (issue #5)
+* fixed bug with changing new-line characters from dos to unix (issue #5)
 * fixed bug with bad interpretation of -t param (issue #4)
 * fixed bug with using subst on Windows (issue #2)
 * many refactorings
