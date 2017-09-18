@@ -24,7 +24,7 @@ class TestParseArgsGetExt(unittest.TestCase):
     def test_simple(self):
         args = MockArgParse()
 
-        result = subst._parse_args__get_ext(args)
+        result = subst._parse_args__get_backup_file_ext(args)
 
         self.assertEqual(result, '.' + subst.DEFAULT_BACKUP_EXTENSION)
 
@@ -32,7 +32,7 @@ class TestParseArgsGetExt(unittest.TestCase):
         args = MockArgParse()
         args.no_backup = True
 
-        result = subst._parse_args__get_ext(args)
+        result = subst._parse_args__get_backup_file_ext(args)
 
         self.assertEqual(result, '')
 
@@ -40,7 +40,7 @@ class TestParseArgsGetExt(unittest.TestCase):
         args = MockArgParse()
         args.ext = 'jpg'
 
-        result = subst._parse_args__get_ext(args)
+        result = subst._parse_args__get_backup_file_ext(args)
 
         self.assertEqual(result, '.' + args.ext)
 
@@ -48,7 +48,7 @@ class TestParseArgsGetExt(unittest.TestCase):
         args = MockArgParse()
         args.ext = '.jpg'
 
-        result = subst._parse_args__get_ext(args)
+        result = subst._parse_args__get_backup_file_ext(args)
 
         self.assertEqual(result, '.' + args.ext)
 
@@ -57,7 +57,7 @@ class TestParseArgsGetExt(unittest.TestCase):
         args.ext = 'jpg'
         args.no_backup = True
 
-        result = subst._parse_args__get_ext(args)
+        result = subst._parse_args__get_backup_file_ext(args)
 
         self.assertEqual(result, '')
 

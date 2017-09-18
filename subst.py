@@ -123,7 +123,7 @@ def debug(message, **kwargs):
     disp(message, **kwargs)
 
 
-def _parse_args__get_ext(args):
+def _parse_args__get_backup_file_ext(args):
     """ Find extension for backup files.
 
         Extension in args is supposed to not have leading dot.
@@ -410,7 +410,7 @@ def parse_args(args):
         args.pattern_and_replace = u(args.pattern_and_replace, INPUT_ENCODING)
 
     try:
-        args.ext = _parse_args__get_ext(args)
+        args.ext = _parse_args__get_backup_file_ext(args)
         args.pattern, args.replace, args.count = _parse_args__pattern(args)
         if args.eval:
             args.replace = _parse_args__eval_replacement(args.replace)
