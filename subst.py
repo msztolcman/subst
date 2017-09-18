@@ -124,6 +124,12 @@ def debug(message, **kwargs):
     disp(message, **kwargs)
 
 
+def _plural_s(cnt, word):
+    if cnt == 1:
+        return word
+    return '%ss' % word
+
+
 def _parse_args__get_backup_file_ext(args):
     """ Find extension for backup files.
 
@@ -510,7 +516,7 @@ def _process_file__handle(src_path, dst_fh, cfg, replace_func):
     with file_opener(src_path, 'r') as fh_src:
         cnt = replace_func(fh_src, dst_fh, cfg.pattern, cfg.replace, cfg.count)
         if cfg.verbose or cfg.debug:
-            debug('%s replacement%s' % (cnt, '' if cnt == 1 else 's'), indent=1)
+            debug('%s %s' % (cnt, _plural_s(cnt, 'replacement')), indent=1)
 
     return cnt
 
@@ -611,9 +617,9 @@ def main():
                 err(u(exc), indent=int(args.verbose or args.debug), exit_code=1)
 
     if args.verbose:
-        debug('There was %d replacement%s in %d file%s.' % (
-            cnt_changes, ('' if cnt_changes == 1 else 's'),
-            cnt_changed_files, ('' if cnt_changed_files == 1 else 's'),
+        debug('There was %d %s in %d %s.' % (
+            cnt_changes, _plural_s(cnt_changes, 'replacement'),
+            cnt_changed_files, _plural_s(cnt_changed_files, 'file'),
         ))
 
     if cnt_changes > 0:
