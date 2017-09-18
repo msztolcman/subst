@@ -50,8 +50,8 @@ Look at result:
                     [--pattern-dot-all] [--pattern-verbose] [--pattern-multiline]
                     [-u] [--encoding-input ENCODING_INPUT]
                     [--encoding-file ENCODING_FILE]
-                    [--encoding-filesystem ENCODING_FILESYSTEM] [-b] [-e EXT]
-                    [--stdin] [--stdout] [--verbose] [--debug] [-v]
+                    [--encoding-filesystem ENCODING_FILESYSTEM] [-b] [-e EXT] [-W]
+                    [--stdin] [--stdout] [-V] [--debug] [-v]
                     [files [files ...]]
     
     Replace PATTERN with REPLACE in many files.
@@ -97,10 +97,10 @@ Look at result:
                             --encoding-filesystem
     --encoding-input ENCODING_INPUT
                             set encoding for parameters like --pattern etc
-                            (default for your system: ascii)
+                            (default for your system: utf-8)
     --encoding-file ENCODING_FILE
                             set encoding for content of processed files (default
-                            for your system: ascii)
+                            for your system: utf-8)
     --encoding-filesystem ENCODING_FILESYSTEM
                             set encoding for paths and filenames (default for your
                             system: utf-8)
@@ -108,10 +108,13 @@ Look at result:
     -e EXT, --backup-extension EXT
                             extension for backup files(ignore if no backup is
                             created), without leading dot. Defaults to: "bak".
+    -W, --expand-wildcards
+                            expand wildcards (see:
+                            https://docs.python.org/3/library/glob.html) in paths
     --stdin               read data from STDIN(implies --stdout)
     --stdout              output data to STDOUT instead of change files in-
                             place(implies --no-backup)
-    --verbose             show files and how many replacements was done and
+    -V, --verbose         show files and how many replacements was done and
                             short summary
     --debug               show more informations
     -v, --version         show program's version number and exit
@@ -234,13 +237,16 @@ ChangeLog
 
 * improvements to handling different encodings
 * exit code give us info about there was any changes
-* improvements to pylintrc, Makefile
-* config for tox
+* added switch --expand-wildcards
+* added -V switch as an alias for --verbose
 * fixes and improvements in built-in help
 * fixed bug with changing new-line characters from dos to unix (issue #5)
 * fixed bug with bad interpretation of -t param (issue #4)
 * fixed bug with using subst on Windows (issue #2)
+* using singular form in verbose mode when it's required
 * many refactorings
+* improvements to pylintrc, Makefile
+* config for tox
 * marked as compatible with Python 3.5 and 3.6
 
 ### v0.4.0
