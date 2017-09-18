@@ -595,8 +595,7 @@ def main():
         cnt_changed_files = 0
 
     else:
-        cnt_changes = 0
-        cnt_changed_files = 0
+        cnt_changes = cnt_changed_files = 0
         for path in args.files:
             path = u(path, FILESYSTEM_ENCODING)
             path = unicodedata.normalize('NFKC', path)
