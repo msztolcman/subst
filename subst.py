@@ -14,6 +14,7 @@ from __future__ import print_function, unicode_literals, division
 import argparse
 import codecs
 import functools
+import glob
 import os
 import os.path
 import re
@@ -262,6 +263,19 @@ def _parse_args__pattern(args):
         raise ParserException('Bad pattern specified: %s' % args.pattern_and_replace)
 
 
+def _parse_args__expand_wildcards(paths):
+    """
+    Expand wildcards in given paths
+    :param paths: 
+    :return: 
+    """
+    _paths = []
+    for path in paths:
+        _paths.extend(glob.glob(path))
+
+    return _paths
+
+
 def wrap_text(txt):
     """ Make custom wrapper for passed text.
 
@@ -354,6 +368,8 @@ def parse_args(args):
                    help='don\'t create backup of modified files.')
     p.add_argument('-e', '--backup-extension', dest='ext', default=DEFAULT_BACKUP_EXTENSION, type=str,
                    help='extension for backup files(ignore if no backup is created), without leading dot. Defaults to: "bak".')
+    p.add_argument('--expand-wildcards', action='store_true',
+                   help='expand wildcards (see: https://docs.python.org/3/library/glob.html) in paths')
     p.add_argument('--stdin', action='store_true',
                    help='read data from STDIN(implies --stdout)')
     p.add_argument('--stdout', action='store_true',
@@ -386,9 +402,12 @@ def parse_args(args):
     if not args.files:
         args.stdin = True
     else:
-        args.files = [u(path, FILESYSTEM_ENCODING) for path in args.files]
         if args.files[0] == '-':
             args.stdin = True
+        else:
+            args.files = [u(path, FILESYSTEM_ENCODING) for path in args.files]
+            if args.expand_wildcards:
+                args.files = _parse_args__expand_wildcards(args.files)
 
     if args.stdin:
         args.stdout = True
