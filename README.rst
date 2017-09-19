@@ -217,6 +217,11 @@ or:
 
 Voila!
 
+Python compatibility
+--------------------
+
+``subst`` is tested against Python 2.7 and Python 3.3+
+
 Authors
 -------
 
@@ -263,6 +268,7 @@ ChangeLog
 coming
 ~~~~~~
 
+-  dropped compatibility with Python 2.6
 -  improvements to handling different encodings
 -  exit code give us info about there was any changes
 -  added switch --expand-wildcards
