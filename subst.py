@@ -32,9 +32,6 @@ INPUT_ENCODING = sys.getdefaultencoding()
 DEFAULT_BACKUP_EXTENSION = 'bak'
 
 
-file_opener = functools.partial(open, newline='') if not IS_PY2 else open
-
-
 class SubstException(Exception):
     """ Exception raised when there is some error.
     """
@@ -66,7 +63,7 @@ def err(*args, **kwargs):
     """
     Display error message.
 
-    It's a wrapper for utils.disp, with additions:
+    It's a wrapper for disp, with additions:
         * file - if not specified, use sys.stderr
         * exit_code - if specified, calls sys.exit with given code. If None, do not exit.
 
@@ -417,6 +414,7 @@ def parse_args(args):
 
     if args.utf8:
         INPUT_ENCODING = FILE_ENCODING = FILESYSTEM_ENCODING = 'utf8'
+        args.encoding_input = args.encoding_file = args.encoding_filesystem = 'utf8'
     else:
         INPUT_ENCODING = args.encoding_input
         FILE_ENCODING = args.encoding_file
@@ -429,9 +427,9 @@ def parse_args(args):
     except LookupError as exc:
         p.error(exc)
 
-    stdin_dash = '-' if not IS_PY2 else str('-')
-    if not args.files or args.files[0] == stdin_dash:
+    if not args.files or args.files[0] == str('-'):
         args.stdin = True
+        args.files = None
     else:
         args.files = list(map(_parse_args__prepare_path, args.files))
 
@@ -475,18 +473,14 @@ def replace_linear(src, dst, pattern, replace, count):
     """
     ret = 0
     for line in src:
-        try:
-            line = u(line, FILE_ENCODING)
-        except UnicodeDecodeError:
-            raise SubstException("Cannot determine encoding of input data, please use --encoding-file option")
-
         if count == 0 or ret < count:
+            if IS_PY2 and not isinstance(line, unicode):
+                line = u(line, FILE_ENCODING)
             line, rest_count = pattern.subn(replace, line, max(0, count - ret))
             ret += rest_count
 
-        if IS_PY2:
+        if IS_PY2 and isinstance(line, unicode):
             line = line.encode(FILE_ENCODING)
-
         dst.write(line)
     return ret
 
@@ -497,14 +491,12 @@ def replace_global(src, dst, pattern, replace, count):
         write it to 'dst', and return quantity of replaces.
     """
     data = src.read()
-    try:
+    if IS_PY2 and not isinstance(data, unicode):
         data = u(data, FILE_ENCODING)
-    except UnicodeDecodeError:
-        raise SubstException("Cannot determine encoding of input data, please use --encoding-file option")
 
     data, ret = pattern.subn(replace, data, count)
 
-    if IS_PY2:
+    if IS_PY2 and isinstance(data, unicode):
         data = data.encode(FILE_ENCODING)
 
     dst.write(data)
@@ -536,7 +528,7 @@ def _process_file__handle(src_path, dst_fh, cfg, replace_func):
         save it to `dst_fh`.
     """
 
-    with file_opener(src_path, 'rb') as fh_src:
+    with codecs.open(src_path, 'r', encoding=FILE_ENCODING) as fh_src:
         cnt = replace_func(fh_src, dst_fh, cfg.pattern, cfg.replace, cfg.count)
         if cfg.verbose or cfg.debug:
             debug('%s %s' % (cnt, _plural_s(cnt, 'replacement')), indent=1)
