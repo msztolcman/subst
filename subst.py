@@ -13,7 +13,7 @@ from __future__ import print_function, unicode_literals, division
 
 import argparse
 import codecs
-import fnmatch
+import glob
 import os
 import os.path
 import re
@@ -271,9 +271,16 @@ def _parse_args__expand_wildcards(paths):
     :param paths: 
     :return: 
     """
+
     _paths = []
+    if sys.platform.startswith('darwin'):
+        normalization_form = 'NFD'
+    else:
+        normalization_form = 'NFC'
+
     for path in paths:
-        _paths.extend(glob(path))
+        path = unicodedata.normalize(normalization_form, path)
+        _paths.extend(glob.glob(path))
 
     return _paths
 
@@ -295,27 +302,9 @@ def wrap_text(txt):
     return os.linesep.join(txt)
 
 
-def glob(pattern):
-    root, pattern = os.path.split(pattern)
-    if not pattern:
-        return root
-    if not root:
-        root = '.'
-
-    try:
-        items = [item.name for item in os.scandir(root)]
-    except AttributeError:
-        items = os.listdir(root)
-
-    items = map(lambda item: unicodedata.normalize('NFKC', item), items)
-    items = fnmatch.filter(items, pattern)
-    return [os.path.join(root, item) for item in items]
-
-
 def _parse_args__prepare_path(path):
     path = os.path.abspath(path)
-    path = u(path, FILESYSTEM_ENCODING)
-    path = unicodedata.normalize('NFKC', path)
+    path = u(path, INPUT_ENCODING)
 
     return path
 
