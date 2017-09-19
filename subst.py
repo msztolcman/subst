@@ -605,12 +605,12 @@ def process_file(path, replace_func, cfg):
     return cnt
 
 
-def main():
+def main(args):
     """ Run tool: parse input arguments, read data, replace and save or display.
     """
 
     try:
-        args = parse_args(sys.argv[1:])
+        args = parse_args(args)
     except (UnicodeDecodeError, UnicodeEncodeError):
         err("Cannot determine encoding of input arguments, please use --encoding-input option", exit_code=1)
 
@@ -647,4 +647,4 @@ def main():
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    sys.exit(main(sys.argv[1:]))
