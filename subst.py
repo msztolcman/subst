@@ -26,6 +26,7 @@ import unicodedata
 __version__ = '0.4.0'
 
 IS_PY2 = sys.version_info[0] < 3
+IS_WIN = sys.platform.startswith('win')
 FILESYSTEM_ENCODING = sys.getfilesystemencoding()
 FILE_ENCODING = sys.getdefaultencoding()
 INPUT_ENCODING = sys.getdefaultencoding()
@@ -279,7 +280,8 @@ def _parse_args__expand_wildcards(paths):
         normalization_form = 'NFC'
 
     for path in paths:
-        path = unicodedata.normalize(normalization_form, path)
+        if not IS_WIN:
+            path = unicodedata.normalize(normalization_form, path)
         _paths.extend(glob.glob(path))
 
     return _paths
@@ -302,11 +304,15 @@ def wrap_text(txt):
     return os.linesep.join(txt)
 
 
-def _parse_args__prepare_path(path):
-    path = os.path.abspath(path)
-    path = u(path, INPUT_ENCODING)
+def _parse_args__prepare_paths(files, expand_wildcards):
+    if not IS_WIN:
+        files = [u(path, INPUT_ENCODING) for path in files]
 
-    return path
+    if expand_wildcards:
+        files = _parse_args__expand_wildcards(files)
+
+    files = [os.path.abspath(path) for path in files]
+    return files
 
 
 # pylint: disable=too-many-branches,too-many-statements
@@ -420,10 +426,8 @@ def parse_args(args):
         args.stdin = True
         args.files = None
     else:
-        args.files = list(map(_parse_args__prepare_path, args.files))
+        args.files = _parse_args__prepare_paths(args.files, args.expand_wildcards)
 
-        if args.expand_wildcards:
-            args.files = _parse_args__expand_wildcards(args.files)
 
     if args.stdin:
         args.stdout = True
