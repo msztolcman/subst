@@ -1,7 +1,10 @@
 subst
 =====
 
-`subst` is simple utility to replace one string into another in given list of files.
+`subst` is simple utility to replace one string (or expression) into another
+in given list of files.
+
+If you like this tool, just [say thanks](https://saythanks.io/to/msztolcman).
 
 Current stable version
 ----------------------
@@ -14,7 +17,8 @@ But why?
 1. There is `sed` for example?
 
     Yes, it is. But `sed` use regexps engine called "Basic Regular Expressions", or "Extended
-    Regular Expression". PCRE is much more widely used dialect.
+    Regular Expression". PCRE (Perl Compatible Regular Expressions) used by `subst` is much
+    more widely used engine.
 
 2. So I can use Perl!
 
@@ -24,8 +28,8 @@ But why?
 OK, so how to use it?
 ---------------------
 
-Simple
-------
+Simple usage
+------------
 
     echo 'Hello World!' | subst -s 's/Hello/Hi/' -
 
@@ -43,102 +47,107 @@ Everything is in help :) Just execute:
 Look at result:
 
     % subst --help
-    usage: subst [-h] [-p PATTERN] [-r REPLACE] [--eval-replace] [-t STRING]
-                 [-s "s/PAT/REP/gixsm"] [-c COUNT] [-l] [-i] [--pattern-dot-all]
-                 [--pattern-verbose] [--pattern-multiline] [--utf8]
-                 [--encoding-input ENCODING_INPUT] [--encoding-file ENCODING_FILE]
-                 [--encoding-filesystem ENCODING_FILESYSTEM] [-b] [-e EXT]
-                 [--stdin] [--stdout] [--verbose] [--debug] [-v]
-                 [files [files ...]]
+    usage: subst.py [-h] [-p PATTERN] [-r REPLACE] [--eval-replace] [-t]
+                    [-s "s/PAT/REP/gixsm"] [-c COUNT] [-l] [-i]
+                    [--pattern-dot-all] [--pattern-verbose] [--pattern-multiline]
+                    [-u] [--encoding-input ENCODING_INPUT]
+                    [--encoding-file ENCODING_FILE]
+                    [--encoding-filesystem ENCODING_FILESYSTEM] [-b] [-e EXT] [-W]
+                    [--stdin] [--stdout] [-V] [--debug] [-v]
+                    [files [files ...]]
     
     Replace PATTERN with REPLACE in many files.
     
     positional arguments:
-      files                 file to parse.
+    files                 files to parse
     
     optional arguments:
-      -h, --help            show this help message and exit
-      -p PATTERN, --pattern PATTERN
+    -h, --help            show this help message and exit
+    -p PATTERN, --pattern PATTERN
                             pattern to replace for. Supersede --pattern-and-
                             replace. Required if --replace is specified.
-      -r REPLACE, --replace REPLACE
+    -r REPLACE, --replace REPLACE
                             replacement. Supersede --pattern-and-replace. Required
                             if --pattern is specified.
-      --eval-replace        if specified, make eval data from --replace(should be
+    --eval-replace        if specified, make eval data from --replace(should be
                             valid Python code). Ignored with --pattern-and-replace
                             argument.
-      -t STRING, --string STRING
-                            if specified, treats --pattern as string, not as
+    -t, --string          if specified, treats --pattern as string, not as
                             regular expression. Ignored with --pattern-and-replace
                             argument.
-      -s "s/PAT/REP/gixsm", --pattern-and-replace "s/PAT/REP/gixsm", --pattern-and-replace "s/PAT/REP/gixsm"
+    -s "s/PAT/REP/gixsm", --pattern-and-replace "s/PAT/REP/gixsm", --pattern-and-replace "s/PAT/REP/gixsm"
                             pattern and replacement in one:
                             s/pattern/replace/g(pattern is always regular
                             expression, /g is optional and stands for --count=0,
                             /i == --ignore-case, /s == --pattern-dot-all, /m ==
                             --pattern-multiline).
-      -c COUNT, --count COUNT
+    -c COUNT, --count COUNT
                             make COUNT replacements for every file (0 makes
                             unlimited changes, default).
-      -l, --linear          apply pattern for every line separately. Without this
+    -l, --linear          apply pattern for every line separately. Without this
                             flag whole file is read into memory.
-      -i, --ignore-case     ignore case of characters when matching
-      --pattern-dot-all     with this flag, dot(.) character in pattern match also
+    -i, --ignore-case     ignore case of characters when matching
+    --pattern-dot-all     with this flag, dot(.) character in pattern match also
                             new line character (see:
-                            http://docs.python.org/2/library/re.html#re.DOTALL).
-      --pattern-verbose     with this flag pattern can be passed as verbose(see:
-                            http://docs.python.org/2/library/re.html#re.VERBOSE).
-      --pattern-multiline   with this flag pattern can be passed as multiline(see:
-                            http://docs.python.org/2/library/re.html#re.MULTILINE)
-                            .
-      --utf8, -u            Use UTF-8 in --encoding-input, --encoding-file and
+                            https://docs.python.org/3/library/re.html#re.DOTALL).
+    --pattern-verbose     with this flag pattern can be passed as verbose(see:
+                            https://docs.python.org/3/library/re.html#re.VERBOSE).
+    --pattern-multiline   with this flag pattern can be passed as multiline(see:
+                            https://docs.python.org/3/library/re.html#re.MULTILINE
+                            ).
+    -u, --utf8            Use UTF-8 in --encoding-input, --encoding-file and
                             --encoding-filesystem
-      --encoding-input ENCODING_INPUT
+    --encoding-input ENCODING_INPUT
                             set encoding for parameters like --pattern etc
                             (default for your system: utf-8)
-      --encoding-file ENCODING_FILE
+    --encoding-file ENCODING_FILE
                             set encoding for content of processed files (default
                             for your system: utf-8)
-      --encoding-filesystem ENCODING_FILESYSTEM
+    --encoding-filesystem ENCODING_FILESYSTEM
                             set encoding for paths and filenames (default for your
                             system: utf-8)
-      -b, --no-backup       disable creating backup of modified files.
-      -e EXT, --backup-extension EXT
+    -b, --no-backup       don't create backup of modified files.
+    -e EXT, --backup-extension EXT
                             extension for backup files(ignore if no backup is
                             created), without leading dot. Defaults to: "bak".
-      --stdin               read data from STDIN(implies --stdout)
-      --stdout              output data to STDOUT instead of change files in-
+    -W, --expand-wildcards
+                            expand wildcards (see:
+                            https://docs.python.org/3/library/glob.html) in paths
+    --stdin               read data from STDIN(implies --stdout)
+    --stdout              output data to STDOUT instead of change files in-
                             place(implies --no-backup)
-      --verbose             show files and how many replacements was done
-      --debug               show more informations
-      -v, --version         show program's version number and exit
+    -V, --verbose         show files and how many replacements was done and
+                            short summary
+    --debug               show more informations
+    -v, --version         show program's version number and exit
     
     Miscellaneous notes:
     * regular expressions engine used here is PCRE, dialect from Python
     * is required to pass either --pattern and -replace, or --pattern-and-
-      replace argument
+    replace argument
     * if pattern passed to --pattern-and-replace has /g modifier, it
-      overwrites --count value
+    overwrites --count value
     * if neither /g modifier nor --count argument is passed, assume that
-      --count is equal 1
+    --count is equal 1
     * if only --count is given, this value is used
     * if --eval-replace is given, --replace must be valid Python code, where
-      can be used m variable. m holds MatchObject instance (see:
-      http://http://docs.python.org/2/library/re.html#match-objects, for
-      example:
+    can be used m variable. m holds MatchObject instance (see:
+    https://docs.python.org/3/library/re.html#match-objects, for example:
         --eval-replace --replace 'm.group(1).lower()'
     * regular expressions with non linear search read whole file to yours
-      computer memory - if file size is bigger then you have memory in your
-      computer, it fails
+    computer memory - if file size is bigger then you have memory in your
+    computer, it fails
     * parsing expression passed to --pattern-and-replace argument is very
-      simple - if you use / as delimiter, then in your expression can't be
-      used this character anymore. If you need to use same character as
-      delimiter and in expression, then better use --pattern and --replace
-      argument
+    simple - if you use / as delimiter, then in your expression can't be
+    used this character anymore. If you need to use same character as
+    delimiter and in expression, then better use --pattern and --replace
+    arguments
+    * you can test exit code to verify there was made any changes (exit code
+    = 0) or not (exit code = 1)
     
     Security notes:
-    * be carefull with --eval-replace argument. When it's given, value
-      passed to --replace is eval-ed, so any not safe code will be executed!
+    * be careful with --eval-replace argument. When it's given, value passed
+    to --replace is eval-ed, so any unsafe code will be executed!
     
     Author:
     Marcin Sztolcman <marcin@urzenia.net> // http://urzenia.net
@@ -146,7 +155,7 @@ Look at result:
     HomePage:
     http://msztolcman.github.io/subst/
 
-Some examples?
+More examples?
 --------------
 
 Simple replace word 'Hello' with 'Hi' in data read from STDIN:
@@ -158,14 +167,36 @@ with 192.168.0.X in `/etc/hosts`:
 
     subst -p '(192\.168)\.1\.(10)' -r '\1.0.\2' /etc/hosts
 
+Regular expressions
+-------------------
+
+A.K.A. regex or regexp.
+You can read more on [Wikipedia](https://en.wikipedia.org/wiki/Regular_expression). Other resources:
+
+- Python documentation on engine `subst` is using: (https://docs.python.org/3/library/re.html)[https://docs.python.org/3/library/re.html]
+- Searchable cheatsheet for Regexps: [https://www.debuggex.com/cheatsheet/regex/pcre](https://www.debuggex.com/cheatsheet/regex/pcre)
+- Regexps tester: [https://www.debuggex.com/?flavor=pcre](https://www.debuggex.com/?flavor=pcre)
+
 Installation
 ------------
 
-`subst` should work on any platform where [Python](http://python.org) is available, it means Linux, Windows, MacOS X etc. There is no dependencies, plain Python power :)
+`subst` should work on any platform where [Python](http://python.org) is available,
+it means Linux, Windows, MacOS X etc. There is no dependencies, plain Python power :)
 
-To install, go to [GitHub releases](https://github.com/msztolcman/subst/releases), download newest release, unpack and put somewhere in `PATH` (ie. `~/bin` or `/usr/local/bin`).
+1. Installtion using PIP
 
-If You want to install newest unstable version, then just copy file to your PATH, for example:
+Simplest way is to use Python's built-in package system:
+
+    pip install subst
+
+2. Using sources
+
+To install, go to [GitHub releases](https://github.com/msztolcman/subst/releases),
+download newest release, unpack and put somewhere in `PATH` (ie. `~/bin`
+or `/usr/local/bin`).
+
+If You want to install newest unstable version, then just copy file to your PATH,
+for example:
 
     curl https://raw.github.com/msztolcman/subst/master/subst.py > /usr/local/bin/subst
 
@@ -174,6 +205,11 @@ or:
     wget https://raw.github.com/msztolcman/subst/master/subst.py -O /usr/local/bin/subst
 
 Voila!
+
+Python compatibility
+--------------------
+
+`subst` is tested against Python 2.7 and Python 3.3+
 
 Authors
 -------
@@ -214,12 +250,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ChangeLog
 ---------
 
-### v0.5.0
+### coming
 
-* many improvements to handling different encodings
+* dropped compatibility with Python 2.6
+* improvements to handling different encodings
+* exit code give us info about there was any changes
+* added switch --expand-wildcards (-W)
+* added -V switch as an alias for --verbose
+* fixes and improvements in built-in help
+* fixed bug with changing new-line characters from dos to unix (issue #5)
+* fixed bug with bad interpretation of -t param (issue #4)
+* fixed bug with using subst on Windows (issue #2)
+* using singular form in verbose mode when it's required
+* many refactorings
 * improvements to pylintrc, Makefile
 * config for tox
-* many refactorings
+* marked as compatible with Python 3.5 and 3.6
 
 ### v0.4.0
 
@@ -229,7 +275,7 @@ ChangeLog
 
 ### v0.3.1
 
-* prepared and uploaded to PYPI 
+* prepared and uploaded to PYPI
 * typos and editorials
 
 ### v0.3
