@@ -1,8 +1,8 @@
 subst
 =====
 
-``subst`` is simple utility to replace one string into another in given
-list of files.
+``subst`` is simple utility to replace one string (or expression) into
+another in given list of files.
 
 If you like this tool, just `say
 thanks <https://saythanks.io/to/msztolcman>`__.
@@ -18,8 +18,9 @@ But why?
 1. There is ``sed`` for example?
 
    Yes, it is. But ``sed`` use regexps engine called "Basic Regular
-   Expressions", or "Extended Regular Expression". PCRE is much more
-   widely used dialect.
+   Expressions", or "Extended Regular Expression". PCRE (Perl Compatible
+   Regular Expressions) used by ``subst`` is much more widely used
+   engine.
 
 2. So I can use Perl!
 
@@ -29,8 +30,8 @@ But why?
 OK, so how to use it?
 ---------------------
 
-Simple
-------
+Simple usage
+------------
 
 ::
 
@@ -164,7 +165,7 @@ Look at result:
     HomePage:
     http://msztolcman.github.io/subst/
 
-Some examples?
+More examples?
 --------------
 
 Simple replace word 'Hello' with 'Hi' in data read from STDIN:
@@ -179,6 +180,19 @@ single octet) with 192.168.0.X in ``/etc/hosts``:
 ::
 
     subst -p '(192\.168)\.1\.(10)' -r '\1.0.\2' /etc/hosts
+
+Regular expressions
+-------------------
+
+A.K.A. regex or regexp. You can read more on
+`Wikipedia <https://en.wikipedia.org/wiki/Regular_expression>`__. Other
+resources:
+
+-  Python documentation on engine ``subst`` is using:
+   (https://docs.python.org/3/library/re.html)[https://docs.python.org/3/library/re.html]
+-  Searchable cheatsheet for Regexps:
+   https://www.debuggex.com/cheatsheet/regex/pcre
+-  Regexps tester: https://www.debuggex.com/?flavor=pcre
 
 Installation
 ------------
@@ -271,7 +285,7 @@ coming
 -  dropped compatibility with Python 2.6
 -  improvements to handling different encodings
 -  exit code give us info about there was any changes
--  added switch --expand-wildcards
+-  added switch --expand-wildcards (-W)
 -  added -V switch as an alias for --verbose
 -  fixes and improvements in built-in help
 -  fixed bug with changing new-line characters from dos to unix (issue
