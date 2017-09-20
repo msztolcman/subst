@@ -1,0 +1,8 @@
+title: Subst
+description: Search and des... argh... replace in many files at once. Use regexp and power of Python to replace what you want.
+google_analytics: UA-207617-22
+show_downloads: true
+theme: jekyll-theme-dinky
+
+gems:
+  - jekyll-mentions
