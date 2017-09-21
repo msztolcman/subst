@@ -279,8 +279,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ChangeLog
 ---------
 
-coming
-~~~~~~
+(dev)
+~~~~~
 
 -  dropped compatibility with Python 2.6
 -  improvements to handling different encodings
