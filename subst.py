@@ -297,6 +297,8 @@ def _parse_args__expand_wildcards(paths):
         normalization_form = 'NFC'
 
     for path in paths:
+        path = os.path.expandvars(path)
+        path = os.path.expanduser(path)
         if not IS_WIN:
             path = unicodedata.normalize(normalization_form, path)
         _paths.extend(glob.glob(path))
