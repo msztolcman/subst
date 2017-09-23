@@ -311,8 +311,9 @@ def _parse_args__prepare_paths(files, expand_wildcards):
     if expand_wildcards:
         files = _parse_args__expand_wildcards(files)
 
-    files = [os.path.abspath(path) for path in files]
-    return files
+    files = (os.path.abspath(path) for path in files)
+    files = (os.path.normcase(path) for path in files)
+    return list(files)
 
 
 # pylint: disable=too-many-branches,too-many-statements
