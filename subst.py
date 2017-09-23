@@ -227,6 +227,17 @@ def _parse_args__pattern(args):
     """
 
     re_flags = re.UNICODE
+    if args.ignore_case:
+        re_flags |= re.IGNORECASE
+
+    if args.pattern_dot_all:
+        re_flags |= re.DOTALL
+
+    if args.pattern_verbose:
+        re_flags |= re.VERBOSE
+
+    if args.pattern_multiline:
+        re_flags |= re.MULTILINE
 
     if args.pattern is not None and args.replace is not None:
         if args.string:
@@ -265,18 +276,6 @@ def _parse_args__pattern(args):
 
         except ValueError:
             raise ParserException('Bad pattern specified: %s' % args.pattern_and_replace)
-
-        if args.ignore_case:
-            re_flags |= re.IGNORECASE
-
-        if args.pattern_dot_all:
-            re_flags |= re.DOTALL
-
-        if args.pattern_verbose:
-            re_flags |= re.VERBOSE
-
-        if args.pattern_multiline:
-            re_flags |= re.MULTILINE
 
         return re.compile(pattern, re_flags), replace, count
     else:
