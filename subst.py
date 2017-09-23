@@ -121,6 +121,23 @@ def debug(message, **kwargs):
     disp(message, **kwargs)
 
 
+def wrap_text(txt):
+    """ Make custom wrapper for passed text.
+
+        Splits given text for lines, and for every line apply custom
+        textwrap.TextWrapper settings, then return reformatted string.
+    """
+    _wrap = textwrap.TextWrapper(
+        width=72,
+        expand_tabs=True,
+        replace_whitespace=False,
+        drop_whitespace=True,
+        subsequent_indent='  ',
+    )
+    txt = [_wrap.fill(line) for line in txt.splitlines()]
+    return os.linesep.join(txt)
+
+
 def _plural_s(cnt, word):
     if cnt == 1:
         return word
@@ -285,23 +302,6 @@ def _parse_args__expand_wildcards(paths):
         _paths.extend(glob.glob(path))
 
     return _paths
-
-
-def wrap_text(txt):
-    """ Make custom wrapper for passed text.
-
-        Splits given text for lines, and for every line apply custom
-        textwrap.TextWrapper settings, then return reformatted string.
-    """
-    _wrap = textwrap.TextWrapper(
-        width=72,
-        expand_tabs=True,
-        replace_whitespace=False,
-        drop_whitespace=True,
-        subsequent_indent='  ',
-    )
-    txt = [_wrap.fill(line) for line in txt.splitlines()]
-    return os.linesep.join(txt)
 
 
 def _parse_args__prepare_paths(files, expand_wildcards):
