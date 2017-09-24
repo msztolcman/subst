@@ -253,15 +253,20 @@ ChangeLog
 ### (dev)
 
 * dropped compatibility with Python 2.6
+* paths are now normalized before processing
 * improvements to handling different encodings
 * exit code give us info about there was any changes
 * added switch --expand-wildcards (-W)
 * added -V switch as an alias for --verbose
+* passing invalid flags to --pattern-and-replace is now an error
 * fixes and improvements in built-in help
+* --pattern-\* and --ignore-case was ignored for --pattern and --replace parameters
+* --pattern-and-replace was incorrectly parsed with braces as delimiters
 * fixed bug with changing new-line characters from dos to unix (issue #5)
 * fixed bug with bad interpretation of -t param (issue #4)
 * fixed bug with using subst on Windows (issue #2)
 * using singular form in verbose mode when it's required
+* tests are now using py.test framework, also added many new tests
 * many refactorings
 * improvements to pylintrc, Makefile
 * config for tox
