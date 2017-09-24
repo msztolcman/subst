@@ -33,6 +33,12 @@ INPUT_ENCODING = sys.getdefaultencoding()
 DEFAULT_BACKUP_EXTENSION = 'bak'
 
 
+if not IS_PY2:
+    # pylint: disable=unused-argument
+    def unicode(*args, **kwargs):
+        """ shut up, pylint"""
+        pass
+
 class SubstException(Exception):
     """ Exception raised when there is some error.
     """
@@ -139,6 +145,7 @@ def wrap_text(txt):
 
 
 def _plural_s(cnt, word):
+    """Return word in plural if cnt is not equal 1"""
     if cnt == 1:
         return word
     return '%ss' % word
@@ -295,8 +302,8 @@ def _parse_args__pattern(args):
 def _parse_args__expand_wildcards(paths):
     """
     Expand wildcards in given paths
-    :param paths: 
-    :return: 
+    :param paths:
+    :return:
     """
 
     _paths = []
@@ -316,6 +323,9 @@ def _parse_args__expand_wildcards(paths):
 
 
 def _parse_args__prepare_paths(files, expand_wildcards):
+    """
+    Prepare paths for processing
+    """
     if not IS_WIN:
         files = [u(path, INPUT_ENCODING) for path in files]
 
@@ -447,6 +457,7 @@ def parse_args(args):
     if args.stdout:
         args.no_backup = True
 
+    # pylint: disable=too-many-boolean-expressions
     if \
             (args.pattern is None and args.replace is None and args.pattern_and_replace is None) or \
             (args.pattern is None and args.replace is not None) or \
@@ -639,8 +650,7 @@ def main(args):
 
     if cnt_changes > 0:
         return 0
-    else:
-        return 1
+    return 1
 
 
 if __name__ == '__main__':
