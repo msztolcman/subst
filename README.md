@@ -269,6 +269,7 @@ ChangeLog
 * tests are now using py.test framework, also added many new tests
 * many refactorings
 * improvements to pylintrc, Makefile
+* using Pipenv to handling dependencies
 * config for tox
 * marked as compatible with Python 3.5 and 3.6
 
