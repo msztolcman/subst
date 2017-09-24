@@ -188,6 +188,7 @@ def _parse_args__parse_pattern(pat):
         pattern, replace = pattern[1:].split(delim[::-1], 1)
         if replace.endswith(delim[1]):
             flags = ''
+            replace = replace[:-1]
         else:
             replace, flags = replace.rsplit(delim[1], 1)
 
