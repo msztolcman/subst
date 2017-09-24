@@ -1,10 +1,10 @@
 distro: register clean build upload
 
 init:
-	pip install -r requirements.txt
+	pipenv install
 
 init-dev:
-	pip install -r requirements-dev.txt
+	pipenv install --dev
 
 doc:
 	pandoc --from=markdown --to=rst --output="README.rst" "README.md"
@@ -24,3 +24,4 @@ upload:
 
 register:
 	python setup.py register
+
