@@ -261,19 +261,28 @@ def _parse_args__pattern(args):
 
             if 'g' in flags:
                 count = 0
+                flags = flags.replace('g', '')
             elif args.count is not None:
                 count = args.count
+                flags = flags.replace('g', '')
             else:
                 count = 1
 
             if 'i' in flags:
                 re_flags |= re.IGNORECASE
+                flags = flags.replace('i', '')
             if 'x' in flags:
                 re_flags |= re.VERBOSE
+                flags = flags.replace('x', '')
             if 's' in flags:
                 re_flags |= re.DOTALL
+                flags = flags.replace('s', '')
             if 'm' in flags:
                 re_flags |= re.MULTILINE
+                flags = flags.replace('m', '')
+
+            if flags:
+                raise ParserException('Bad pattern specified: unknown flags "%s"' % flags)
 
         except ValueError:
             raise ParserException('Bad pattern specified: %s' % args.pattern_and_replace)
