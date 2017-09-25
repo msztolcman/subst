@@ -1,6 +1,9 @@
 subst
 =====
 
+|subst version| |subst license| |subst python compatibility| |say
+thanks!|
+
 ``subst`` is simple utility to replace one string (or expression) into
 another in given list of files.
 
@@ -334,3 +337,12 @@ v0.2
 ~~~~
 
 -  second public version
+
+.. |subst version| image:: https://img.shields.io/pypi/v/subst.svg
+   :target: https://pypi.python.org/pypi/subst
+.. |subst license| image:: https://img.shields.io/pypi/l/subst.svg
+   :target: https://pypi.python.org/pypi/subst
+.. |subst python compatibility| image:: https://img.shields.io/pypi/pyversions/subst.svg
+   :target: https://pypi.python.org/pypi/subst
+.. |say thanks!| image:: https://img.shields.io/badge/Say%20Thanks!-🦉-1EAEDB.svg
+   :target: https://saythanks.io/to/msztolcman

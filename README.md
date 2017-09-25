@@ -1,6 +1,11 @@
 subst
 =====
 
+[![subst version](https://img.shields.io/pypi/v/subst.svg)](https://pypi.python.org/pypi/subst)
+[![subst license](https://img.shields.io/pypi/l/subst.svg)](https://pypi.python.org/pypi/subst)
+[![subst python compatibility](https://img.shields.io/pypi/pyversions/subst.svg)](https://pypi.python.org/pypi/subst)
+[![say thanks!](https://img.shields.io/badge/Say%20Thanks!-🦉-1EAEDB.svg)](https://saythanks.io/to/msztolcman)
+
 `subst` is simple utility to replace one string (or expression) into another
 in given list of files.
 
