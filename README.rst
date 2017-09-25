@@ -344,5 +344,5 @@ v0.2
    :target: https://pypi.python.org/pypi/subst
 .. |subst python compatibility| image:: https://img.shields.io/pypi/pyversions/subst.svg
    :target: https://pypi.python.org/pypi/subst
-.. |say thanks!| image:: https://img.shields.io/badge/Say%20Thanks!-🦉-1EAEDB.svg
+.. |say thanks!| image:: https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg
    :target: https://saythanks.io/to/msztolcman
