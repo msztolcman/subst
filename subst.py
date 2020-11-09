@@ -16,7 +16,7 @@ import codecs
 import glob
 import os
 import os.path
-import re
+import regex as re
 import shutil
 import sys
 import tempfile
