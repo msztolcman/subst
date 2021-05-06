@@ -43,5 +43,6 @@ setup(
             'subst=subst:main',
         ],
     },
+    install_requires=["regex"]
 )
 
